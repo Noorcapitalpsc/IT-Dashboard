@@ -8,3 +8,11 @@ scrape_configs:
         - '192.168.132.55:9182'
         - '192.168.132.10:9182'
         - '192.168.132.11:9182'
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'pushed-metrics'
+    honor_labels: true
+    static_configs:
+      - targets: ['localhost:9091']
