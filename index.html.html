@@ -1,0 +1,439 @@
+
+<h2 class="sr-only">IT Manager Dashboard — Assets, Network, and User Access monitoring with AI assistant</h2>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.app { display: flex; height: 100vh; min-height: 700px; background: var(--color-background-tertiary); }
+.sidebar { width: 220px; flex-shrink: 0; background: var(--color-background-primary); border-right: 0.5px solid var(--color-border-tertiary); display: flex; flex-direction: column; padding: 20px 0; }
+.logo { padding: 0 20px 24px; border-bottom: 0.5px solid var(--color-border-tertiary); margin-bottom: 16px; }
+.logo-text { font-size: 15px; font-weight: 500; color: var(--color-text-primary); }
+.logo-sub { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; font-size: 13px; color: var(--color-text-secondary); cursor: pointer; border-radius: 0; transition: all 0.15s; }
+.nav-item:hover { background: var(--color-background-secondary); color: var(--color-text-primary); }
+.nav-item.active { color: #185FA5; background: #E6F1FB; font-weight: 500; }
+.nav-item i { font-size: 17px; }
+.nav-section { font-size: 10px; font-weight: 500; color: var(--color-text-tertiary); padding: 16px 20px 6px; letter-spacing: 0.06em; text-transform: uppercase; }
+.main { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+.topbar { background: var(--color-background-primary); border-bottom: 0.5px solid var(--color-border-tertiary); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.topbar-title { font-size: 16px; font-weight: 500; color: var(--color-text-primary); }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.ai-btn { display: flex; align-items: center; gap: 6px; padding: 7px 14px; background: #185FA5; color: #E6F1FB; border: none; border-radius: var(--border-radius-md); font-size: 13px; font-weight: 500; cursor: pointer; }
+.ai-btn:hover { background: #0C447C; }
+.badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+.badge-success { background: #EAF3DE; color: #3B6D11; }
+.badge-warning { background: #FAEEDA; color: #854F0B; }
+.badge-danger { background: #FCEBEB; color: #A32D2D; }
+.badge-info { background: #E6F1FB; color: #185FA5; }
+.content { padding: 24px; flex: 1; }
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+.metric-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 16px; }
+.metric-label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
+.metric-value { font-size: 26px; font-weight: 500; color: var(--color-text-primary); }
+.metric-delta { font-size: 11px; color: var(--color-text-tertiary); margin-top: 4px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.panel { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 18px; }
+.panel-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
+.panel-title span { color: var(--color-text-tertiary); font-weight: 400; font-size: 12px; }
+.table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.table th { color: var(--color-text-tertiary); font-weight: 500; text-align: left; padding: 0 0 8px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.table td { padding: 9px 0; border-bottom: 0.5px solid var(--color-border-tertiary); color: var(--color-text-secondary); vertical-align: middle; }
+.table tr:last-child td { border-bottom: none; }
+.table td:first-child { color: var(--color-text-primary); font-weight: 500; }
+.server-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.server-name { font-size: 12px; font-weight: 500; color: var(--color-text-primary); width: 110px; flex-shrink: 0; }
+.bar-track { flex: 1; height: 6px; background: var(--color-background-secondary); border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 3px; }
+.bar-val { font-size: 11px; color: var(--color-text-secondary); width: 36px; text-align: right; flex-shrink: 0; }
+.dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.dot-green { background: #639922; }
+.dot-amber { background: #BA7517; }
+.dot-red { background: #E24B4A; }
+.ai-panel { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); margin-bottom: 16px; overflow: hidden; }
+.ai-panel-header { padding: 14px 18px; border-bottom: 0.5px solid var(--color-border-tertiary); display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: var(--color-text-primary); background: var(--color-background-secondary); }
+.ai-messages { padding: 14px 18px; min-height: 120px; max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+.msg { max-width: 85%; padding: 9px 13px; border-radius: var(--border-radius-md); font-size: 12px; line-height: 1.55; }
+.msg-ai { background: #E6F1FB; color: #0C447C; align-self: flex-start; }
+.msg-user { background: var(--color-background-secondary); color: var(--color-text-primary); align-self: flex-end; }
+.ai-input-row { padding: 12px 18px; border-top: 0.5px solid var(--color-border-tertiary); display: flex; gap: 8px; }
+.ai-input { flex: 1; font-size: 13px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 8px 12px; background: var(--color-background-secondary); color: var(--color-text-primary); outline: none; }
+.ai-input:focus { border-color: #185FA5; }
+.send-btn { background: #185FA5; color: #E6F1FB; border: none; border-radius: var(--border-radius-md); padding: 8px 14px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+.send-btn:hover { background: #0C447C; }
+.user-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.user-row:last-child { border-bottom: none; }
+.avatar { width: 30px; height: 30px; border-radius: 50%; background: #E6F1FB; color: #185FA5; font-size: 11px; font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.user-info { flex: 1; }
+.user-name { font-size: 12px; font-weight: 500; color: var(--color-text-primary); }
+.user-role { font-size: 11px; color: var(--color-text-tertiary); }
+.tab-row { display: flex; gap: 4px; margin-bottom: 16px; }
+.tab { padding: 6px 14px; font-size: 12px; border-radius: var(--border-radius-md); cursor: pointer; border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-primary); color: var(--color-text-secondary); }
+.tab.active { background: #185FA5; color: #E6F1FB; border-color: #185FA5; }
+</style>
+
+<div class="app">
+  <div class="sidebar">
+    <div class="logo">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+        <i class="ti ti-shield-check" style="font-size:20px;color:#185FA5;" aria-hidden="true"></i>
+        <div class="logo-text">IT Command</div>
+      </div>
+      <div class="logo-sub">Infrastructure Manager</div>
+    </div>
+    <div class="nav-section">Overview</div>
+    <div class="nav-item active" onclick="switchView('dashboard',this)"><i class="ti ti-layout-dashboard" aria-hidden="true"></i> Dashboard</div>
+    <div class="nav-section">Monitor</div>
+    <div class="nav-item" onclick="switchView('assets',this)"><i class="ti ti-devices" aria-hidden="true"></i> Assets & Inventory</div>
+    <div class="nav-item" onclick="switchView('network',this)"><i class="ti ti-server" aria-hidden="true"></i> Network & Servers</div>
+    <div class="nav-item" onclick="switchView('users',this)"><i class="ti ti-users" aria-hidden="true"></i> User Accounts</div>
+    <div class="nav-section">System</div>
+    <div class="nav-item" onclick="switchView('alerts',this)"><i class="ti ti-bell" aria-hidden="true"></i> Alerts <span class="badge badge-danger" style="margin-left:auto;">3</span></div>
+    <div class="nav-item" onclick="switchView('reports',this)"><i class="ti ti-chart-bar" aria-hidden="true"></i> Reports</div>
+    <div style="margin-top:auto;padding:16px 20px;border-top:0.5px solid var(--color-border-tertiary);">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="avatar" style="width:32px;height:32px;">IT</div>
+        <div>
+          <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);">IT Manager</div>
+          <div style="font-size:11px;color:var(--color-text-tertiary);">Admin</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="page-title">Dashboard</div>
+      <div class="topbar-right">
+        <span style="font-size:12px;color:var(--color-text-tertiary);">Last sync: 2 min ago</span>
+        <button class="ai-btn" onclick="focusAI()"><i class="ti ti-sparkles" aria-hidden="true"></i> Ask AI</button>
+      </div>
+    </div>
+
+    <div class="content" id="main-content">
+      <!-- DASHBOARD VIEW -->
+      <div id="view-dashboard">
+        <div class="metrics">
+          <div class="metric-card">
+            <div class="metric-label"><i class="ti ti-devices" style="font-size:14px;color:#185FA5;" aria-hidden="true"></i> Total Assets</div>
+            <div class="metric-value">348</div>
+            <div class="metric-delta">↑ 12 added this month</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label"><i class="ti ti-server" style="font-size:14px;color:#3B6D11;" aria-hidden="true"></i> Servers Online</div>
+            <div class="metric-value">24<span style="font-size:14px;color:var(--color-text-tertiary);">/26</span></div>
+            <div class="metric-delta"><span style="color:#A32D2D;">2 need attention</span></div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label"><i class="ti ti-users" style="font-size:14px;color:#854F0B;" aria-hidden="true"></i> Active Users</div>
+            <div class="metric-value">187</div>
+            <div class="metric-delta">↓ 5 inactive accounts</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label"><i class="ti ti-alert-triangle" style="font-size:14px;color:#A32D2D;" aria-hidden="true"></i> Open Alerts</div>
+            <div class="metric-value">3</div>
+            <div class="metric-delta"><span style="color:#A32D2D;">1 critical</span></div>
+          </div>
+        </div>
+
+        <div class="ai-panel">
+          <div class="ai-panel-header">
+            <i class="ti ti-sparkles" style="font-size:16px;color:#185FA5;" aria-hidden="true"></i>
+            AI Assistant — ask anything about your infrastructure
+          </div>
+          <div class="ai-messages" id="ai-messages">
+            <div class="msg msg-ai">Hi! I'm monitoring your infrastructure. Server <strong>PROD-DB-02</strong> has high CPU usage (91%) — you may want to investigate. What can I help you with?</div>
+          </div>
+          <div class="ai-input-row">
+            <input class="ai-input" id="ai-input" placeholder="Ask about assets, servers, users, alerts…" onkeydown="if(event.key==='Enter')sendAI()" />
+            <button class="send-btn" onclick="sendAI()"><i class="ti ti-send" aria-hidden="true"></i> Send</button>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="panel">
+            <div class="panel-title">Server CPU Usage <span>Live</span></div>
+            <div id="server-bars"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">Recent Alerts <span>Last 24h</span></div>
+            <table class="table">
+              <thead><tr><th>Type</th><th>Message</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>PROD-DB-02</td><td style="color:var(--color-text-secondary);">CPU &gt; 90%</td><td><span class="badge badge-danger">Critical</span></td></tr>
+                <tr><td>SWITCH-03</td><td style="color:var(--color-text-secondary);">Link down</td><td><span class="badge badge-warning">Warning</span></td></tr>
+                <tr><td>VPN-GW-01</td><td style="color:var(--color-text-secondary);">High latency</td><td><span class="badge badge-warning">Warning</span></td></tr>
+                <tr><td>BACKUP-SRV</td><td style="color:var(--color-text-secondary);">Job complete</td><td><span class="badge badge-success">OK</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ASSETS VIEW -->
+      <div id="view-assets" style="display:none;">
+        <div class="tab-row">
+          <div class="tab active" onclick="filterAssets('all',this)">All (348)</div>
+          <div class="tab" onclick="filterAssets('hardware',this)">Hardware (214)</div>
+          <div class="tab" onclick="filterAssets('software',this)">Software (89)</div>
+          <div class="tab" onclick="filterAssets('other',this)">Other (45)</div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Asset Inventory <span id="asset-count">348 items</span></div>
+          <table class="table" id="asset-table">
+            <thead><tr><th>Asset</th><th>Type</th><th>Assigned To</th><th>Location</th><th>Status</th><th>Last Seen</th></tr></thead>
+            <tbody id="asset-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- NETWORK VIEW -->
+      <div id="view-network" style="display:none;">
+        <div class="metrics" style="grid-template-columns:repeat(3,1fr);">
+          <div class="metric-card">
+            <div class="metric-label"><i class="ti ti-server" style="font-size:14px;color:#185FA5;" aria-hidden="true"></i> Servers</div>
+            <div class="metric-value">24<span style="font-size:14px;color:var(--color-text-tertiary);">/26</span></div>
+            <div class="metric-delta" style="color:#3B6D11;">92% uptime</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label"><i class="ti ti-wifi" style="font-size:14px;color:#3B6D11;" aria-hidden="true"></i> Network Uptime</div>
+            <div class="metric-value">99.7%</div>
+            <div class="metric-delta">30-day average</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label"><i class="ti ti-arrow-up-right" style="font-size:14px;color:#854F0B;" aria-hidden="true"></i> Bandwidth Used</div>
+            <div class="metric-value">2.4<span style="font-size:14px;color:var(--color-text-tertiary);"> Gbps</span></div>
+            <div class="metric-delta">of 10 Gbps total</div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Server Status</div>
+          <table class="table">
+            <thead><tr><th>Server</th><th>Role</th><th>CPU</th><th>RAM</th><th>Disk</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>PROD-WEB-01</td><td style="color:var(--color-text-secondary);">Web</td><td>42%</td><td>61%</td><td>55%</td><td><span class="badge badge-success">Online</span></td></tr>
+              <tr><td>PROD-DB-02</td><td style="color:var(--color-text-secondary);">Database</td><td style="color:#A32D2D;font-weight:500;">91%</td><td>78%</td><td>82%</td><td><span class="badge badge-danger">Critical</span></td></tr>
+              <tr><td>PROD-APP-03</td><td style="color:var(--color-text-secondary);">App</td><td>33%</td><td>45%</td><td>40%</td><td><span class="badge badge-success">Online</span></td></tr>
+              <tr><td>DEV-SRV-01</td><td style="color:var(--color-text-secondary);">Dev</td><td>18%</td><td>30%</td><td>60%</td><td><span class="badge badge-success">Online</span></td></tr>
+              <tr><td>BACKUP-SRV</td><td style="color:var(--color-text-secondary);">Backup</td><td>5%</td><td>22%</td><td>88%</td><td><span class="badge badge-warning">High Disk</span></td></tr>
+              <tr><td>VPN-GW-01</td><td style="color:var(--color-text-secondary);">VPN</td><td>27%</td><td>40%</td><td>35%</td><td><span class="badge badge-warning">Latency</span></td></tr>
+              <tr><td>MAIL-SRV</td><td style="color:var(--color-text-secondary);">Mail</td><td>12%</td><td>55%</td><td>70%</td><td><span class="badge badge-success">Online</span></td></tr>
+              <tr><td>SWITCH-03</td><td style="color:var(--color-text-secondary);">Network</td><td>—</td><td>—</td><td>—</td><td><span class="badge badge-danger">Offline</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- USERS VIEW -->
+      <div id="view-users" style="display:none;">
+        <div class="panel" style="margin-bottom:16px;">
+          <div class="panel-title">User Accounts & Access <span>187 active</span></div>
+          <table class="table">
+            <thead><tr><th>User</th><th>Department</th><th>Role</th><th>Last Login</th><th>MFA</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar">SA</div>Sarah Al-Rashid</div></td><td style="color:var(--color-text-secondary);">Engineering</td><td style="color:var(--color-text-secondary);">Admin</td><td>Today 09:12</td><td><span class="badge badge-success">On</span></td><td><span class="badge badge-success">Active</span></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar" style="background:#FAEEDA;color:#854F0B;">MK</div>Mohammed K.</div></td><td style="color:var(--color-text-secondary);">Finance</td><td style="color:var(--color-text-secondary);">User</td><td>Today 08:44</td><td><span class="badge badge-success">On</span></td><td><span class="badge badge-success">Active</span></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar" style="background:#EAF3DE;color:#3B6D11;">LT</div>Laura Torres</div></td><td style="color:var(--color-text-secondary);">HR</td><td style="color:var(--color-text-secondary);">Manager</td><td>Yesterday</td><td><span class="badge badge-danger">Off</span></td><td><span class="badge badge-success">Active</span></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar" style="background:#FCEBEB;color:#A32D2D;">JC</div>James Chen</div></td><td style="color:var(--color-text-secondary);">Operations</td><td style="color:var(--color-text-secondary);">User</td><td>30 days ago</td><td><span class="badge badge-success">On</span></td><td><span class="badge badge-warning">Inactive</span></td></tr>
+              <tr><td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar" style="background:#EEEDFE;color:#3C3489;">NP</div>Nina Patel</div></td><td style="color:var(--color-text-secondary);">IT</td><td style="color:var(--color-text-secondary);">Admin</td><td>Today 10:01</td><td><span class="badge badge-success">On</span></td><td><span class="badge badge-success">Active</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="grid2">
+          <div class="panel">
+            <div class="panel-title">Access by Department</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div class="server-row"><span class="server-name" style="font-size:12px;color:var(--color-text-primary);">Engineering</span><div class="bar-track"><div class="bar-fill" style="width:62%;background:#185FA5;"></div></div><span class="bar-val">62</span></div>
+              <div class="server-row"><span class="server-name" style="font-size:12px;color:var(--color-text-primary);">Finance</span><div class="bar-track"><div class="bar-fill" style="width:40%;background:#3B6D11;"></div></div><span class="bar-val">40</span></div>
+              <div class="server-row"><span class="server-name" style="font-size:12px;color:var(--color-text-primary);">Operations</span><div class="bar-track"><div class="bar-fill" style="width:38%;background:#BA7517;"></div></div><span class="bar-val">38</span></div>
+              <div class="server-row"><span class="server-name" style="font-size:12px;color:var(--color-text-primary);">HR</span><div class="bar-track"><div class="bar-fill" style="width:25%;background:#993C1D;"></div></div><span class="bar-val">25</span></div>
+              <div class="server-row"><span class="server-name" style="font-size:12px;color:var(--color-text-primary);">IT</span><div class="bar-track"><div class="bar-fill" style="width:22%;background:#534AB7;"></div></div><span class="bar-val">22</span></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">MFA Compliance</div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:13px;color:var(--color-text-secondary);">MFA Enabled</span>
+                <div style="display:flex;align-items:center;gap:8px;"><div class="bar-track" style="width:100px;"><div class="bar-fill" style="width:82%;background:#639922;"></div></div><span style="font-size:12px;font-weight:500;color:#3B6D11;">82%</span></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:13px;color:var(--color-text-secondary);">MFA Disabled</span>
+                <div style="display:flex;align-items:center;gap:8px;"><div class="bar-track" style="width:100px;"><div class="bar-fill" style="width:18%;background:#E24B4A;"></div></div><span style="font-size:12px;font-weight:500;color:#A32D2D;">18%</span></div>
+              </div>
+              <div style="margin-top:4px;padding:10px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);font-size:12px;color:var(--color-text-secondary);">
+                <i class="ti ti-alert-circle" style="color:#BA7517;vertical-align:-2px;" aria-hidden="true"></i> 34 users still need to enable MFA. Consider enforcing policy.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALERTS VIEW -->
+      <div id="view-alerts" style="display:none;">
+        <div class="panel">
+          <div class="panel-title">Active Alerts <span>3 open</span></div>
+          <table class="table">
+            <thead><tr><th>Severity</th><th>Source</th><th>Message</th><th>Time</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td><span class="badge badge-danger">Critical</span></td><td>PROD-DB-02</td><td style="color:var(--color-text-secondary);">CPU sustained above 90% for 15 min</td><td>10 min ago</td><td><button onclick="sendAI('Investigate PROD-DB-02 high CPU and suggest remediation')" style="font-size:11px;padding:4px 10px;cursor:pointer;background:transparent;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);color:var(--color-text-secondary);">Ask AI ↗</button></td></tr>
+              <tr><td><span class="badge badge-warning">Warning</span></td><td>SWITCH-03</td><td style="color:var(--color-text-secondary);">Port 4 link down since 08:32</td><td>1.5h ago</td><td><button onclick="sendAI('What could cause SWITCH-03 port link down and how to fix it?')" style="font-size:11px;padding:4px 10px;cursor:pointer;background:transparent;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);color:var(--color-text-secondary);">Ask AI ↗</button></td></tr>
+              <tr><td><span class="badge badge-warning">Warning</span></td><td>VPN-GW-01</td><td style="color:var(--color-text-secondary);">Latency above 120ms threshold</td><td>2h ago</td><td><button onclick="sendAI('Diagnose high latency on VPN-GW-01')" style="font-size:11px;padding:4px 10px;cursor:pointer;background:transparent;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);color:var(--color-text-secondary);">Ask AI ↗</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- REPORTS VIEW -->
+      <div id="view-reports" style="display:none;">
+        <div class="grid2">
+          <div class="panel">
+            <div class="panel-title">Generate Report</div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <select style="font-size:13px;padding:8px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-primary);">
+                <option>Asset Inventory Summary</option>
+                <option>Server Uptime Report</option>
+                <option>User Access Audit</option>
+                <option>MFA Compliance Report</option>
+                <option>Security Alerts History</option>
+              </select>
+              <select style="font-size:13px;padding:8px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-primary);">
+                <option>Last 7 days</option>
+                <option>Last 30 days</option>
+                <option>Last 90 days</option>
+                <option>Custom range</option>
+              </select>
+              <button onclick="sendAI('Generate an asset inventory summary report for the last 30 days')" style="padding:9px;background:#185FA5;color:#E6F1FB;border:none;border-radius:var(--border-radius-md);font-size:13px;cursor:pointer;">Generate with AI ↗</button>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">Recent Reports</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary);">
+                <i class="ti ti-file-text" style="font-size:18px;color:#185FA5;" aria-hidden="true"></i>
+                <div style="flex:1;"><div style="font-size:12px;font-weight:500;color:var(--color-text-primary);">Asset Inventory - April 2026</div><div style="font-size:11px;color:var(--color-text-tertiary);">Generated May 1</div></div>
+                <span class="badge badge-info">PDF</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary);">
+                <i class="ti ti-file-text" style="font-size:18px;color:#3B6D11;" aria-hidden="true"></i>
+                <div style="flex:1;"><div style="font-size:12px;font-weight:500;color:var(--color-text-primary);">User Access Audit - Q1</div><div style="font-size:11px;color:var(--color-text-tertiary);">Generated Apr 15</div></div>
+                <span class="badge badge-success">Excel</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:8px 0;">
+                <i class="ti ti-file-text" style="font-size:18px;color:#854F0B;" aria-hidden="true"></i>
+                <div style="flex:1;"><div style="font-size:12px;font-weight:500;color:var(--color-text-primary);">Server Uptime - March 2026</div><div style="font-size:11px;color:var(--color-text-tertiary);">Generated Apr 2</div></div>
+                <span class="badge badge-warning">PDF</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const views = ['dashboard','assets','network','users','alerts','reports'];
+const titles = {dashboard:'Dashboard',assets:'Assets & Inventory',network:'Network & Servers',users:'User Accounts & Access',alerts:'Alerts',reports:'Reports'};
+
+function switchView(v, el) {
+  views.forEach(id => { document.getElementById('view-'+id).style.display = 'none'; });
+  document.getElementById('view-'+v).style.display = '';
+  document.getElementById('page-title').textContent = titles[v];
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+  if(el) el.classList.add('active');
+}
+
+const servers = [
+  {name:'PROD-WEB-01', cpu:42, status:'ok'},
+  {name:'PROD-DB-02', cpu:91, status:'crit'},
+  {name:'PROD-APP-03', cpu:33, status:'ok'},
+  {name:'DEV-SRV-01', cpu:18, status:'ok'},
+  {name:'BACKUP-SRV', cpu:5, status:'warn'},
+  {name:'VPN-GW-01', cpu:27, status:'warn'},
+];
+
+function renderBars() {
+  const c = {'ok':'#639922','crit':'#E24B4A','warn':'#BA7517'};
+  document.getElementById('server-bars').innerHTML = servers.map(s =>
+    `<div class="server-row"><span class="server-name">${s.name}</span><div class="bar-track"><div class="bar-fill" style="width:${s.cpu}%;background:${c[s.status]};"></div></div><span class="bar-val">${s.cpu}%</span></div>`
+  ).join('');
+}
+renderBars();
+
+const assets = [
+  {name:'MacBook Pro 16"',type:'Hardware',assignedTo:'Sarah Al-Rashid',location:'Dubai HQ',status:'Active',lastSeen:'Today'},
+  {name:'Dell OptiPlex 7090',type:'Hardware',assignedTo:'Mohammed K.',location:'Dubai HQ',status:'Active',lastSeen:'Today'},
+  {name:'Microsoft 365 E3',type:'Software',assignedTo:'187 users',location:'Cloud',status:'Licensed',lastSeen:'Active'},
+  {name:'Cisco Catalyst 9300',type:'Hardware',assignedTo:'Network Team',location:'Server Room',status:'Warning',lastSeen:'1.5h ago'},
+  {name:'Lenovo ThinkPad T14',type:'Hardware',assignedTo:'Laura Torres',location:'Dubai HQ',status:'Active',lastSeen:'Yesterday'},
+  {name:'Adobe Creative Cloud',type:'Software',assignedTo:'Design Team',location:'Cloud',status:'Licensed',lastSeen:'Today'},
+  {name:'HP LaserJet 5035',type:'Hardware',assignedTo:'Shared',location:'Floor 2',status:'Active',lastSeen:'2 days ago'},
+  {name:'Zoom Enterprise',type:'Software',assignedTo:'All users',location:'Cloud',status:'Licensed',lastSeen:'Today'},
+];
+
+function renderAssets(filter) {
+  const filtered = filter==='all' ? assets : assets.filter(a => {
+    if(filter==='hardware') return a.type==='Hardware';
+    if(filter==='software') return a.type==='Software';
+    return a.type!=='Hardware'&&a.type!=='Software';
+  });
+  const statusBadge = s => {
+    if(s==='Active'||s==='Licensed') return `<span class="badge badge-success">${s}</span>`;
+    if(s==='Warning') return `<span class="badge badge-warning">${s}</span>`;
+    return `<span class="badge badge-info">${s}</span>`;
+  };
+  document.getElementById('asset-tbody').innerHTML = filtered.map(a =>
+    `<tr><td>${a.name}</td><td style="color:var(--color-text-secondary);">${a.type}</td><td style="color:var(--color-text-secondary);">${a.assignedTo}</td><td style="color:var(--color-text-secondary);">${a.location}</td><td>${statusBadge(a.status)}</td><td style="color:var(--color-text-secondary);">${a.lastSeen}</td></tr>`
+  ).join('');
+  document.getElementById('asset-count').textContent = filtered.length+' items';
+}
+renderAssets('all');
+
+function filterAssets(filter, el) {
+  document.querySelectorAll('#view-assets .tab').forEach(t => t.classList.remove('active'));
+  if(el) el.classList.add('active');
+  renderAssets(filter);
+}
+
+async function sendAI(prefill) {
+  const input = document.getElementById('ai-input');
+  const msgs = document.getElementById('ai-messages');
+  const text = prefill || input.value.trim();
+  if(!text) return;
+  input.value = '';
+  if(document.getElementById('view-dashboard').style.display==='none') {
+    switchView('dashboard', document.querySelector('.nav-item'));
+  }
+  msgs.innerHTML += `<div class="msg msg-user">${text}</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+  const thinking = document.createElement('div');
+  thinking.className = 'msg msg-ai';
+  thinking.textContent = '…';
+  msgs.appendChild(thinking);
+  msgs.scrollTop = msgs.scrollHeight;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:`You are an AI assistant embedded in an IT Manager dashboard. You help IT managers monitor assets, servers, network, and user accounts. 
+Infrastructure context: 348 assets total, 24/26 servers online, PROD-DB-02 is critical (CPU 91%), SWITCH-03 is offline, VPN-GW-01 has high latency, 187 active users, 82% MFA compliance, 34 users without MFA.
+Be concise, direct, and actionable. Use bullet points when listing items. Reference specific servers/assets by name.`,
+        messages:[{role:'user',content:text}]
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.find(b=>b.type==='text')?.text || 'Unable to get a response.';
+    thinking.textContent = reply;
+  } catch(e) {
+    thinking.textContent = 'AI is unavailable right now. Check your connection.';
+  }
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function focusAI() {
+  if(document.getElementById('view-dashboard').style.display==='none') switchView('dashboard');
+  document.getElementById('ai-input').focus();
+}
+</script>
