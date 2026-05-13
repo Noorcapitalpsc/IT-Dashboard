@@ -1,207 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IT Command - Noor Capital</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;background:#0f1117;color:#e2e8f0}
-.app{display:flex;height:100vh}
-.sidebar{width:225px;flex-shrink:0;background:#161b27;border-right:1px solid #1e2d40;display:flex;flex-direction:column;padding:20px 0}
-.logo{padding:0 20px 24px;border-bottom:1px solid #1e2d40;margin-bottom:16px}
-.logo-text{font-size:15px;font-weight:600;color:#e2e8f0}
-.logo-sub{font-size:11px;color:#64748b;margin-top:2px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 20px;font-size:13px;color:#94a3b8;cursor:pointer;transition:all .15s}
-.nav-item:hover{background:#1e293b;color:#e2e8f0}
-.nav-item.active{color:#60a5fa;background:#1e3a5f;font-weight:500}
-.nav-item i{font-size:17px}
-.nav-section{font-size:10px;font-weight:600;color:#475569;padding:16px 20px 6px;letter-spacing:.06em;text-transform:uppercase}
-.main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
-.topbar{background:#161b27;border-bottom:1px solid #1e2d40;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.topbar-title{font-size:16px;font-weight:600;color:#e2e8f0}
-.topbar-right{display:flex;align-items:center;gap:12px}
-.ai-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer}
-.live-dot{width:8px;height:8px;border-radius:50%;background:#4ade80;display:inline-block;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500}
-.badge-success{background:#14532d;color:#86efac}
-.badge-warning{background:#451a03;color:#fcd34d}
-.badge-danger{background:#450a0a;color:#fca5a5}
-.content{padding:24px;flex:1}
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
-.metric-card{background:#1e293b;border-radius:8px;padding:16px}
-.metric-label{font-size:12px;color:#64748b;margin-bottom:6px;display:flex;align-items:center;gap:5px}
-.metric-value{font-size:26px;font-weight:600;color:#e2e8f0}
-.metric-delta{font-size:11px;color:#475569;margin-top:4px}
-.bar-track{width:100%;height:5px;background:#0f1117;border-radius:3px;overflow:hidden;margin-top:6px}
-.bar-fill{height:100%;border-radius:3px;transition:width 1s ease}
-.panel{background:#161b27;border:1px solid #1e2d40;border-radius:12px;padding:18px;margin-bottom:16px}
-.panel-title{font-size:13px;font-weight:600;color:#e2e8f0;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
-.panel-title span{color:#475569;font-weight:400;font-size:12px}
-.table{width:100%;border-collapse:collapse;font-size:12px}
-.table th{color:#475569;font-weight:600;text-align:left;padding:0 0 10px;border-bottom:1px solid #1e2d40}
-.table td{padding:10px 0;border-bottom:1px solid #1e2d40;color:#94a3b8;vertical-align:middle}
-.table tr:last-child td{border-bottom:none}
-.table td:first-child{color:#e2e8f0;font-weight:500}
-.srow{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.sname{font-size:12px;font-weight:500;color:#e2e8f0;width:90px;flex-shrink:0}
-.btrack{flex:1;height:6px;background:#0f1117;border-radius:3px;overflow:hidden}
-.bfill{height:100%;border-radius:3px;transition:width 1s ease}
-.bval{font-size:11px;color:#94a3b8;width:36px;text-align:right;flex-shrink:0}
-.ai-panel{background:#161b27;border:1px solid #1e2d40;border-radius:12px;margin-bottom:16px;overflow:hidden}
-.ai-header{padding:12px 18px;border-bottom:1px solid #1e2d40;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#e2e8f0;background:#1e293b}
-.ai-msgs{padding:14px 18px;min-height:80px;max-height:160px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
-.msg{max-width:85%;padding:8px 12px;border-radius:8px;font-size:12px;line-height:1.6}
-.msg-ai{background:#1e3a5f;color:#93c5fd;align-self:flex-start}
-.msg-user{background:#1e293b;color:#e2e8f0;align-self:flex-end}
-.ai-row{padding:10px 18px;border-top:1px solid #1e2d40;display:flex;gap:8px}
-.ai-inp{flex:1;font-size:13px;border:1px solid #1e2d40;border-radius:8px;padding:7px 12px;background:#1e293b;color:#e2e8f0;outline:none}
-.ai-inp:focus{border-color:#2563eb}
-.send-btn{background:#2563eb;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:13px;cursor:pointer}
-.si{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.si-g{background:#4ade80}.si-r{background:#f87171}.si-y{background:#fbbf24}
-.srv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
-.srv-card{background:#1e293b;border-radius:10px;padding:16px;border:1px solid #1e2d40}
-.srv-card.up{border-left:3px solid #4ade80}
-.srv-card.down{border-left:3px solid #f87171}
-.srv-card.warn{border-left:3px solid #fbbf24}
-</style>
-</head>
-<body>
-<div class="app">
-  <div class="sidebar">
-    <div class="logo">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-        <i class="ti ti-shield-check" style="font-size:20px;color:#60a5fa"></i>
-        <div class="logo-text">IT Command</div>
-      </div>
-      <div class="logo-sub">Noor Capital Infrastructure</div>
-    </div>
-    <div class="nav-section">Overview</div>
-    <div class="nav-item active" onclick="switchView('dashboard',this)"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
-    <div class="nav-section">Monitor</div>
-    <div class="nav-item" onclick="switchView('servers',this)"><i class="ti ti-server"></i> Servers <span class="live-dot" style="margin-left:auto"></span></div>
-    <div class="nav-item" onclick="switchView('alerts',this)"><i class="ti ti-bell"></i> Alerts <span class="badge badge-danger" id="alert-badge" style="margin-left:auto">0</span></div>
-    <div class="nav-section">Deploy</div>
-    <div class="nav-item" onclick="switchView('agent',this)"><i class="ti ti-download"></i> Agent Installer</div>
-    <div class="nav-section">System</div>
-    <div class="nav-item" onclick="switchView('settings',this)"><i class="ti ti-settings"></i> Settings</div>
-    <div style="margin-top:auto;padding:16px 20px;border-top:1px solid #1e2d40">
-      <div style="display:flex;align-items:center;gap:8px">
-        <div style="width:32px;height:32px;border-radius:50%;background:#1e3a5f;color:#60a5fa;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center">IT</div>
-        <div>
-          <div style="font-size:12px;font-weight:600;color:#e2e8f0">IT Manager</div>
-          <div style="font-size:11px;color:#475569" id="sidebar-status">Connecting...</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="main">
-    <div class="topbar">
-      <div class="topbar-title" id="page-title">Dashboard</div>
-      <div class="topbar-right">
-        <span id="last-update" style="font-size:12px;color:#475569">--</span>
-        <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:#94a3b8"><div class="si si-y" id="prom-dot"></div> Live</div>
-        <button class="ai-btn" onclick="switchView('dashboard',null);setTimeout(function(){document.getElementById('ai-inp').focus()},100)"><i class="ti ti-sparkles"></i> Ask AI</button>
-      </div>
-    </div>
-    <div class="content">
-      <div id="view-dashboard">
-        <div class="metrics">
-          <div class="metric-card">
-            <div class="metric-label"><i class="ti ti-server" style="font-size:14px;color:#60a5fa"></i> Servers Online</div>
-            <div class="metric-value" id="m-servers">-/-</div>
-            <div class="metric-delta" id="d-servers">Loading...</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label"><i class="ti ti-cpu" style="font-size:14px;color:#4ade80"></i> Avg CPU</div>
-            <div class="metric-value" id="m-cpu">--%</div>
-            <div class="bar-track"><div class="bar-fill" id="b-cpu" style="width:0%;background:#4ade80"></div></div>
-            <div class="metric-delta" id="d-cpu">Loading...</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label"><i class="ti ti-database" style="font-size:14px;color:#fbbf24"></i> Avg Memory</div>
-            <div class="metric-value" id="m-mem">--%</div>
-            <div class="bar-track"><div class="bar-fill" id="b-mem" style="width:0%;background:#fbbf24"></div></div>
-            <div class="metric-delta" id="d-mem">Loading...</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label"><i class="ti ti-bell" style="font-size:14px;color:#f87171"></i> Active Alerts</div>
-            <div class="metric-value" id="m-alerts">0</div>
-            <div class="metric-delta" id="d-alerts">All systems normal</div>
-          </div>
-        </div>
-        <div class="ai-panel">
-          <div class="ai-header"><i class="ti ti-sparkles" style="font-size:15px;color:#60a5fa"></i> AI Assistant</div>
-          <div class="ai-msgs" id="ai-msgs"><div class="msg msg-ai">Connected to Render. I can see real metrics from all your servers. Ask me anything!</div></div>
-          <div class="ai-row">
-            <input class="ai-inp" id="ai-inp" placeholder="Ask about servers, CPU, memory..." onkeydown="if(event.key==='Enter')sendAI()"/>
-            <button class="send-btn" onclick="sendAI()"><i class="ti ti-send"></i></button>
-          </div>
-        </div>
-        <div class="panel">
-          <div class="panel-title">All Servers <span class="live-dot"></span></div>
-          <table class="table">
-            <thead><tr><th>Server</th><th>CPU</th><th>Memory</th><th>Disk</th><th>Status</th></tr></thead>
-            <tbody id="servers-table"><tr><td colspan="5" style="text-align:center;color:#475569;padding:20px">Loading...</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-      <div id="view-servers" style="display:none">
-        <div class="srv-grid" id="srv-grid"></div>
-      </div>
-      <div id="view-alerts" style="display:none">
-        <div class="panel">
-          <div class="panel-title">Active Alerts <span id="alerts-count">0 open</span></div>
-          <div id="alerts-body"></div>
-        </div>
-      </div>
-      <div id="view-agent" style="display:none">
-        <div class="panel">
-          <div class="panel-title">Agent Installer <span>Deploy to any Windows server</span></div>
-          <div style="background:#1e293b;border-radius:10px;padding:20px;margin-bottom:20px">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-              <div>
-                <div style="font-size:14px;font-weight:600;color:#e2e8f0">ITAgent-Setup.bat</div>
-                <div style="font-size:12px;color:#64748b;margin-top:2px">One-click installer for any Windows server</div>
-              </div>
-              <button onclick="downloadAgent()" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:#2563eb;color:#fff"><i class="ti ti-download"></i> Download</button>
-            </div>
-            <div style="background:#0f1117;border-radius:8px;padding:12px;font-size:12px;color:#64748b;line-height:2">
-              <i class="ti ti-check" style="color:#4ade80"></i> Downloads windows_exporter automatically<br>
-              <i class="ti ti-check" style="color:#4ade80"></i> Installs and starts monitoring service<br>
-              <i class="ti ti-check" style="color:#4ade80"></i> Opens firewall port 9182
-            </div>
-          </div>
-          <div style="border-top:1px solid #1e2d40;padding-top:16px">
-            <div style="font-size:13px;font-weight:600;color:#e2e8f0;margin-bottom:12px">Registered Servers</div>
-            <div id="reg-servers"></div>
-          </div>
-        </div>
-      </div>
-      <div id="view-settings" style="display:none">
-        <div class="panel" style="max-width:480px">
-          <div class="panel-title">Pushgateway Connection</div>
-          <div style="display:flex;flex-direction:column;gap:12px">
-            <div>
-              <div style="font-size:12px;color:#64748b;margin-bottom:6px">Pushgateway URL (Render)</div>
-              <div style="display:flex;gap:8px">
-                <input id="prom-url-inp" style="flex:1;font-size:13px;padding:8px 12px;border:1px solid #1e2d40;border-radius:8px;background:#1e293b;color:#e2e8f0;outline:none"/>
-                <button onclick="saveUrl()" style="background:#2563eb;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer">Connect</button>
-              </div>
-            </div>
-            <div style="padding:12px;background:#1e293b;border-radius:8px;font-size:12px">
-              <div style="font-weight:600;color:#94a3b8;margin-bottom:4px">Status</div>
-              <div id="set-status" style="color:#64748b">Checking...</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 <script>
 var GURL = localStorage.getItem('pgUrl') || 'https://it-dashboard-sgkf.onrender.com';
 var allAlerts = [];
@@ -243,6 +39,8 @@ async function fetchAll(){
     var text = await r.text();
 
     var servers = {};
+
+    // First pass — collect all metrics
     text.split('\n').forEach(function(line){
       if(!line || line.startsWith('#')) return;
       var match = line.match(/^(\w+)\{([^}]*)\}\s+([\d.eE+\-]+)/);
@@ -258,6 +56,11 @@ async function fetchAll(){
       if(name==='cpu_usage') servers[inst].cpu=Math.round(val*10)/10;
       if(name==='memory_usage') servers[inst].mem=Math.round(val*10)/10;
       if(name==='disk_usage') servers[inst].disk=Math.round(val*10)/10;
+    });
+
+    // Second pass — if server has metrics but server_up=0, mark online
+    Object.values(servers).forEach(function(s){
+      if(s.cpu!==null && s.up===0) s.up=1;
     });
 
     serverData = Object.values(servers);
@@ -305,7 +108,7 @@ async function fetchAll(){
   } catch(e){
     document.getElementById('prom-dot').className='si si-r';
     document.getElementById('sidebar-status').textContent='Not connected';
-    document.getElementById('set-status').textContent='Cannot reach '+GURL;
+    document.getElementById('set-status').textContent='Cannot reach '+GURL+' - check Render is running';
     document.getElementById('last-update').textContent='Connection failed';
     document.getElementById('servers-table').innerHTML='<tr><td colspan="5" style="text-align:center;color:#475569;padding:20px">Cannot connect to '+GURL+'</td></tr>';
   }
@@ -409,5 +212,3 @@ document.getElementById('prom-url-inp').value=GURL;
 fetchAll();
 setInterval(fetchAll,15000);
 </script>
-</body>
-</html>
