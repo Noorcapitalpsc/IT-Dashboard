@@ -3,417 +3,1370 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IT Command - Noor Capital</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<title>IT Command Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;background:#0f1117;color:#e2e8f0}
-.app{display:flex;height:100vh}
-.sidebar{width:225px;flex-shrink:0;background:#161b27;border-right:1px solid #1e2d40;display:flex;flex-direction:column;padding:20px 0}
-.logo{padding:0 20px 24px;border-bottom:1px solid #1e2d40;margin-bottom:16px}
-.logo-text{font-size:15px;font-weight:600;color:#e2e8f0}
-.logo-sub{font-size:11px;color:#64748b;margin-top:2px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 20px;font-size:13px;color:#94a3b8;cursor:pointer;transition:all .15s}
-.nav-item:hover{background:#1e293b;color:#e2e8f0}
-.nav-item.active{color:#60a5fa;background:#1e3a5f;font-weight:500}
-.nav-item i{font-size:17px}
-.nav-section{font-size:10px;font-weight:600;color:#475569;padding:16px 20px 6px;letter-spacing:.06em;text-transform:uppercase}
-.main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
-.topbar{background:#161b27;border-bottom:1px solid #1e2d40;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.topbar-title{font-size:16px;font-weight:600;color:#e2e8f0}
-.topbar-right{display:flex;align-items:center;gap:12px}
-.ai-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer}
-.live-dot{width:8px;height:8px;border-radius:50%;background:#4ade80;display:inline-block;animation:pulse 2s infinite}
+:root{
+--bg:#0d1117;--bg2:#161b22;--bg3:#1c2128;--bg4:#21262d;
+--border:#30363d;--border2:#444c56;
+--text:#e6edf3;--text2:#8b949e;--text3:#6e7681;
+--blue:#58a6ff;--blue-bg:rgba(88,166,255,0.1);
+--green:#3fb950;--green-bg:rgba(63,185,80,0.1);
+--amber:#d29922;--amber-bg:rgba(210,153,34,0.1);
+--red:#f85149;--red-bg:rgba(248,81,73,0.1);
+--purple:#bc8cff;--purple-bg:rgba(188,140,255,0.1);
+--teal:#39d353;--cyan:#79c0ff;
+--font:'IBM Plex Sans',sans-serif;
+--mono:'IBM Plex Mono',monospace;
+--radius:6px;--radius2:10px;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--blue);text-decoration:none}
+
+/* ── LAYOUT ── */
+.shell{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:220px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:52px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;flex-shrink:0}
+.content{flex:1;overflow-y:auto;padding:20px}
+
+/* ── SIDEBAR ── */
+.sidebar-logo{padding:16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.logo-icon{width:32px;height:32px;background:var(--blue);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;color:#000;font-size:16px}
+.logo-text{font-size:15px;font-weight:600;letter-spacing:-0.3px}
+.logo-sub{font-size:11px;color:var(--text2);margin-top:1px}
+.nav-section{padding:12px 8px 4px;font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.08em}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:var(--radius);cursor:pointer;margin:1px 8px;color:var(--text2);font-size:13px;transition:all .15s;position:relative}
+.nav-item:hover{background:var(--bg3);color:var(--text)}
+.nav-item.active{background:var(--blue-bg);color:var(--blue)}
+.nav-item i{font-size:16px;width:16px}
+.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:10px;font-weight:600;padding:1px 6px;border-radius:10px}
+.nav-badge.amber{background:var(--amber)}
+.nav-badge.blue{background:var(--blue);color:#000}
+
+/* ── TOPBAR ── */
+.page-title{font-size:16px;font-weight:600}
+.tb-right{display:flex;align-items:center;gap:12px}
+.tb-btn{display:flex;align-items:center;gap:6px;padding:6px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;font-size:12px;color:var(--text2);transition:all .15s}
+.tb-btn:hover{color:var(--text);border-color:var(--border2)}
+.tb-btn.primary{background:var(--blue);color:#000;border-color:var(--blue);font-weight:500}
+.tb-btn.primary:hover{opacity:.9}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500}
-.badge-success{background:#14532d;color:#86efac}
-.badge-warning{background:#451a03;color:#fcd34d}
-.badge-danger{background:#450a0a;color:#fca5a5}
-.content{padding:24px;flex:1}
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
-.metric-card{background:#1e293b;border-radius:8px;padding:16px}
-.metric-label{font-size:12px;color:#64748b;margin-bottom:6px;display:flex;align-items:center;gap:5px}
-.metric-value{font-size:26px;font-weight:600;color:#e2e8f0}
-.metric-delta{font-size:11px;color:#475569;margin-top:4px}
-.bar-track{width:100%;height:5px;background:#0f1117;border-radius:3px;overflow:hidden;margin-top:6px}
-.bar-fill{height:100%;border-radius:3px;transition:width 1s ease}
-.panel{background:#161b27;border:1px solid #1e2d40;border-radius:12px;padding:18px;margin-bottom:16px}
-.panel-title{font-size:13px;font-weight:600;color:#e2e8f0;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
-.panel-title span{color:#475569;font-weight:400;font-size:12px}
-.table{width:100%;border-collapse:collapse;font-size:12px}
-.table th{color:#475569;font-weight:600;text-align:left;padding:0 0 10px;border-bottom:1px solid #1e2d40}
-.table td{padding:10px 0;border-bottom:1px solid #1e2d40;color:#94a3b8;vertical-align:middle}
-.table tr:last-child td{border-bottom:none}
-.table td:first-child{color:#e2e8f0;font-weight:500}
-.srow{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.sname{font-size:12px;font-weight:500;color:#e2e8f0;width:90px;flex-shrink:0}
-.btrack{flex:1;height:6px;background:#0f1117;border-radius:3px;overflow:hidden}
-.bfill{height:100%;border-radius:3px;transition:width 1s ease}
-.bval{font-size:11px;color:#94a3b8;width:36px;text-align:right;flex-shrink:0}
-.ai-panel{background:#161b27;border:1px solid #1e2d40;border-radius:12px;margin-bottom:16px;overflow:hidden}
-.ai-header{padding:12px 18px;border-bottom:1px solid #1e2d40;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#e2e8f0;background:#1e293b}
-.ai-msgs{padding:14px 18px;min-height:80px;max-height:160px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
-.msg{max-width:85%;padding:8px 12px;border-radius:8px;font-size:12px;line-height:1.6}
-.msg-ai{background:#1e3a5f;color:#93c5fd;align-self:flex-start}
-.msg-user{background:#1e293b;color:#e2e8f0;align-self:flex-end}
-.ai-row{padding:10px 18px;border-top:1px solid #1e2d40;display:flex;gap:8px}
-.ai-inp{flex:1;font-size:13px;border:1px solid #1e2d40;border-radius:8px;padding:7px 12px;background:#1e293b;color:#e2e8f0;outline:none}
-.ai-inp:focus{border-color:#2563eb}
-.send-btn{background:#2563eb;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:13px;cursor:pointer}
-.si{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.si-g{background:#4ade80}.si-r{background:#f87171}.si-y{background:#fbbf24}
-.srv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
-.srv-card{background:#1e293b;border-radius:10px;padding:16px;border:1px solid #1e2d40}
-.srv-card.up{border-left:3px solid #4ade80}
-.srv-card.down{border-left:3px solid #f87171}
-.srv-card.warn{border-left:3px solid #fbbf24}
+.clock{font-family:var(--mono);font-size:13px;color:var(--text2)}
+
+/* ── PANELS ── */
+.panel{display:none}
+.panel.active{display:block}
+
+/* ── CARDS ── */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:16px}
+.card-title{font-size:13px;font-weight:500;color:var(--text2);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card-title i{font-size:15px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+
+/* ── METRIC ── */
+.metric{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:14px 16px}
+.metric-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.metric-val{font-size:26px;font-weight:500;font-family:var(--mono)}
+.metric-val.green{color:var(--green)}
+.metric-val.red{color:var(--red)}
+.metric-val.amber{color:var(--amber)}
+.metric-val.blue{color:var(--blue)}
+.metric-sub{font-size:11px;color:var(--text3);margin-top:3px}
+
+/* ── TABLES ── */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:8px 12px;font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border)}
+td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text2)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg3);color:var(--text)}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:500}
+.badge.green{background:var(--green-bg);color:var(--green)}
+.badge.red{background:var(--red-bg);color:var(--red)}
+.badge.amber{background:var(--amber-bg);color:var(--amber)}
+.badge.blue{background:var(--blue-bg);color:var(--blue)}
+.badge.purple{background:var(--purple-bg);color:var(--purple)}
+
+/* ── FORMS ── */
+.form-row{margin-bottom:12px}
+.form-label{font-size:12px;color:var(--text2);margin-bottom:4px;display:block}
+input,select,textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:7px 10px;color:var(--text);font-family:var(--font);font-size:13px;outline:none;transition:border .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--blue)}
+select option{background:var(--bg3)}
+textarea{resize:vertical;min-height:80px}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:none;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:20px;width:480px;max-height:80vh;overflow-y:auto}
+.modal-title{font-size:15px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.modal-close{cursor:pointer;color:var(--text3);font-size:18px}
+.modal-close:hover{color:var(--text)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius);cursor:pointer;font-size:13px;font-family:var(--font);border:none;transition:all .15s}
+.btn-primary{background:var(--blue);color:#000;font-weight:500}
+.btn-primary:hover{opacity:.85}
+.btn-secondary{background:var(--bg3);border:1px solid var(--border);color:var(--text2)}
+.btn-secondary:hover{color:var(--text)}
+.btn-danger{background:var(--red-bg);color:var(--red);border:1px solid transparent}
+.btn-danger:hover{opacity:.8}
+
+/* ── PROGRESS ── */
+.prog-bar{height:4px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;border-radius:2px;transition:width .5s}
+.prog-fill.green{background:var(--green)}
+.prog-fill.amber{background:var(--amber)}
+.prog-fill.red{background:var(--red)}
+.prog-fill.blue{background:var(--blue)}
+
+/* ── ALERT FEED ── */
+.alert-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:var(--radius);margin-bottom:6px;border-left:3px solid}
+.alert-item.critical{background:var(--red-bg);border-color:var(--red)}
+.alert-item.warning{background:var(--amber-bg);border-color:var(--amber)}
+.alert-item.info{background:var(--blue-bg);border-color:var(--blue)}
+.alert-item.success{background:var(--green-bg);border-color:var(--green)}
+.alert-title{font-size:13px;font-weight:500}
+.alert-time{font-size:11px;color:var(--text3);margin-top:2px}
+
+/* ── CHARTS ── */
+.chart-wrap{position:relative;width:100%}
+
+/* ── SEARCH / FILTER ── */
+.search-bar{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.search-bar input{width:240px}
+.filter-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+
+/* ── TICKET ── */
+.ticket-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .15s}
+.ticket-card:hover{border-color:var(--border2)}
+.ticket-id{font-size:11px;font-family:var(--mono);color:var(--text3)}
+.ticket-title{font-size:13px;font-weight:500;margin:2px 0 6px}
+
+/* ── SLA BAR ── */
+.sla-bar{display:flex;align-items:center;gap:8px;margin-top:6px}
+.sla-label{font-size:11px;color:var(--text3);width:30px}
+
+/* ── DEVICE CARD ── */
+.device-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:12px}
+
+/* ── SIDEBAR COLLAPSE ── */
+@media(max-width:768px){.sidebar{display:none}}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* ── ONCALL ── */
+.oncall-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+.oncall-row:last-child{border-bottom:none}
+.avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
+
+/* ── TIMELINE ── */
+.timeline-item{display:flex;gap:12px;margin-bottom:14px}
+.timeline-dot{width:10px;height:10px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.timeline-line{width:1px;background:var(--border);flex-shrink:0;margin:14px 0 0 4px}
+
+/* ── RUNBOOK ── */
+.runbook-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);padding:14px;margin-bottom:8px}
+
+/* ── TAB ── */
+.tabs{display:flex;gap:2px;background:var(--bg3);border-radius:var(--radius);padding:3px;margin-bottom:16px;width:fit-content}
+.tab{padding:5px 14px;border-radius:4px;cursor:pointer;font-size:12px;color:var(--text2);transition:all .15s}
+.tab.active{background:var(--bg2);color:var(--text);font-weight:500}
+
+/* ── SECTION HEADER ── */
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.section-title{font-size:14px;font-weight:600}
+
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="sidebar">
-    <div class="logo">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-        <i class="ti ti-shield-check" style="font-size:20px;color:#60a5fa"></i>
-        <div class="logo-text">IT Command</div>
-      </div>
-      <div class="logo-sub">Noor Capital Infrastructure</div>
-    </div>
-    <div class="nav-section">Overview</div>
-    <div class="nav-item active" onclick="switchView('dashboard',this)"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
-    <div class="nav-section">Monitor</div>
-    <div class="nav-item" onclick="switchView('servers',this)"><i class="ti ti-server"></i> Servers <span class="live-dot" style="margin-left:auto"></span></div>
-    <div class="nav-item" onclick="switchView('alerts',this)"><i class="ti ti-bell"></i> Alerts <span class="badge badge-danger" id="alert-badge" style="margin-left:auto">0</span></div>
-    <div class="nav-section">Deploy</div>
-    <div class="nav-item" onclick="switchView('agent',this)"><i class="ti ti-download"></i> Agent Installer</div>
-    <div class="nav-section">System</div>
-    <div class="nav-item" onclick="switchView('settings',this)"><i class="ti ti-settings"></i> Settings</div>
-    <div style="margin-top:auto;padding:16px 20px;border-top:1px solid #1e2d40">
-      <div style="display:flex;align-items:center;gap:8px">
-        <div style="width:32px;height:32px;border-radius:50%;background:#1e3a5f;color:#60a5fa;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center">IT</div>
-        <div>
-          <div style="font-size:12px;font-weight:600;color:#e2e8f0">IT Manager</div>
-          <div style="font-size:11px;color:#475569" id="sidebar-status">Connecting...</div>
-        </div>
-      </div>
+<h1 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden">IT Command Center — Comprehensive IT Management Dashboard</h1>
+<div class="shell">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon"><i class="ti ti-server-2" aria-hidden="true"></i></div>
+    <div>
+      <div class="logo-text">IT Command</div>
+      <div class="logo-sub">Operations Center</div>
     </div>
   </div>
-  <div class="main">
-    <div class="topbar">
-      <div class="topbar-title" id="page-title">Dashboard</div>
-      <div class="topbar-right">
-        <span id="last-update" style="font-size:12px;color:#475569">--</span>
-        <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:#94a3b8"><div class="si si-y" id="prom-dot"></div> Live</div>
-        <button class="ai-btn" onclick="switchView('dashboard',null);setTimeout(function(){document.getElementById('ai-inp').focus()},100)"><i class="ti ti-sparkles"></i> Ask AI</button>
+
+  <div class="nav-section">Overview</div>
+  <div class="nav-item active" onclick="nav('dashboard')"><i class="ti ti-layout-dashboard" aria-hidden="true"></i> Dashboard</div>
+  <div class="nav-item" onclick="nav('alerts')"><i class="ti ti-bell" aria-hidden="true"></i> Alerts <span class="nav-badge" id="nb-alerts">3</span></div>
+  <div class="nav-item" onclick="nav('reports')"><i class="ti ti-chart-bar" aria-hidden="true"></i> Reports</div>
+
+  <div class="nav-section">Infrastructure</div>
+  <div class="nav-item" onclick="nav('servers')"><i class="ti ti-server" aria-hidden="true"></i> Servers</div>
+  <div class="nav-item" onclick="nav('network')"><i class="ti ti-network" aria-hidden="true"></i> Network</div>
+  <div class="nav-item" onclick="nav('ssl')"><i class="ti ti-certificate" aria-hidden="true"></i> SSL Certs <span class="nav-badge amber" id="nb-ssl">2</span></div>
+
+  <div class="nav-section">Assets</div>
+  <div class="nav-item" onclick="nav('hardware')"><i class="ti ti-device-laptop" aria-hidden="true"></i> Hardware</div>
+  <div class="nav-item" onclick="nav('software')"><i class="ti ti-apps" aria-hidden="true"></i> Software Licenses</div>
+  <div class="nav-item" onclick="nav('vendors')"><i class="ti ti-building-store" aria-hidden="true"></i> Vendors</div>
+
+  <div class="nav-section">Helpdesk</div>
+  <div class="nav-item" onclick="nav('tickets')"><i class="ti ti-ticket" aria-hidden="true"></i> Tickets <span class="nav-badge blue" id="nb-tickets">7</span></div>
+  <div class="nav-item" onclick="nav('userportal')"><i class="ti ti-user-circle" aria-hidden="true"></i> User Portal</div>
+
+  <div class="nav-section">Security</div>
+  <div class="nav-item" onclick="nav('security')"><i class="ti ti-shield-lock" aria-hidden="true"></i> Security</div>
+  <div class="nav-item" onclick="nav('audit')"><i class="ti ti-list-check" aria-hidden="true"></i> Audit Log</div>
+
+  <div class="nav-section">Team</div>
+  <div class="nav-item" onclick="nav('oncall')"><i class="ti ti-phone-call" aria-hidden="true"></i> On-Call</div>
+  <div class="nav-item" onclick="nav('runbooks')"><i class="ti ti-book" aria-hidden="true"></i> Runbooks</div>
+  <div class="nav-item" onclick="nav('changes')"><i class="ti ti-git-merge" aria-hidden="true"></i> Change Requests</div>
+  <div class="nav-item" onclick="nav('maintenance')"><i class="ti ti-calendar-event" aria-hidden="true"></i> Maintenance</div>
+
+  <div class="nav-section">Integrations</div>
+  <div class="nav-item" onclick="nav('integrations')"><i class="ti ti-plug" aria-hidden="true"></i> Integrations</div>
+  <div class="nav-item" onclick="nav('costs')"><i class="ti ti-coin" aria-hidden="true"></i> Cost Tracking</div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="page-title" id="page-title">Dashboard</div>
+    <div class="tb-right">
+      <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2)">
+        <div class="status-dot"></div> All Systems Operational
+      </div>
+      <div class="clock" id="clock">00:00:00</div>
+      <div class="tb-btn" onclick="exportCSV()"><i class="ti ti-download" style="font-size:14px"></i> Export</div>
+      <div class="tb-btn primary" onclick="openQuickAdd()"><i class="ti ti-plus" style="font-size:14px"></i> Quick Add</div>
+    </div>
+  </div>
+
+  <div class="content" id="content">
+
+<!-- ════════════ DASHBOARD ════════════ -->
+<div class="panel active" id="panel-dashboard">
+  <div class="grid-4" style="margin-bottom:14px">
+    <div class="metric"><div class="metric-label">Servers Online</div><div class="metric-val green">24<span style="font-size:14px;color:var(--text3)">/26</span></div><div class="metric-sub">2 offline</div></div>
+    <div class="metric"><div class="metric-label">Open Tickets</div><div class="metric-val blue" id="dash-tickets">7</div><div class="metric-sub">3 critical</div></div>
+    <div class="metric"><div class="metric-label">Expiring Soon</div><div class="metric-val amber" id="dash-expiring">5</div><div class="metric-sub">within 30 days</div></div>
+    <div class="metric"><div class="metric-label">Security Alerts</div><div class="metric-val red">3</div><div class="metric-sub">Requires attention</div></div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:14px">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-chart-line"></i> Network Throughput (Mbps)</div>
+      <div class="chart-wrap" style="height:180px"><canvas id="netChart" role="img" aria-label="Line chart showing network throughput over 12 hours">Network traffic data displayed as a line chart.</canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-cpu"></i> Server Resource Usage</div>
+      <div class="chart-wrap" style="height:180px"><canvas id="resChart" role="img" aria-label="Bar chart showing CPU, RAM and disk usage across servers">Server resource usage: CPU, RAM, Disk shown as bars.</canvas></div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="section-hdr"><div class="section-title">Recent Alerts</div></div>
+      <div id="dash-alerts-feed"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-ticket"></i> Active Tickets by Priority</div>
+      <div class="chart-wrap" style="height:160px"><canvas id="ticketChart" role="img" aria-label="Doughnut chart of tickets by priority">Ticket priorities: Critical, High, Medium, Low.</canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ ALERTS ════════════ -->
+<div class="panel" id="panel-alerts">
+  <div class="section-hdr">
+    <div class="section-title">Alerts &amp; Notifications</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-secondary" onclick="markAllRead()"><i class="ti ti-check"></i> Mark All Read</button>
+      <button class="btn btn-primary" onclick="openAlertModal()"><i class="ti ti-plus"></i> Test Alert</button>
+    </div>
+  </div>
+  <div class="filter-row">
+    <select style="width:130px" id="alertFilter" onchange="renderAlerts()"><option value="">All Types</option><option>critical</option><option>warning</option><option>info</option><option>success</option></select>
+  </div>
+  <div id="alerts-list"></div>
+</div>
+
+<!-- ════════════ SERVERS ════════════ -->
+<div class="panel" id="panel-servers">
+  <div class="section-hdr">
+    <div class="section-title">Server Inventory</div>
+    <button class="btn btn-primary" onclick="openServerModal()"><i class="ti ti-plus"></i> Add Server</button>
+  </div>
+  <div class="search-bar">
+    <input type="text" placeholder="Search servers..." id="srv-search" oninput="renderServers()">
+    <select style="width:120px" id="srv-filter" onchange="renderServers()"><option value="">All Status</option><option>online</option><option>offline</option><option>warning</option></select>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table id="srv-table">
+      <thead><tr><th>Name</th><th>IP Address</th><th>Type</th><th>Status</th><th>CPU</th><th>RAM</th><th>Uptime</th><th>Actions</th></tr></thead>
+      <tbody id="srv-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════ NETWORK ════════════ -->
+<div class="panel" id="panel-network">
+  <div class="section-hdr"><div class="section-title">Network Monitoring</div></div>
+  <div class="grid-4" style="margin-bottom:14px">
+    <div class="metric"><div class="metric-label">Avg Latency</div><div class="metric-val green">12ms</div></div>
+    <div class="metric"><div class="metric-label">Packet Loss</div><div class="metric-val green">0.1%</div></div>
+    <div class="metric"><div class="metric-label">Bandwidth Used</div><div class="metric-val blue">64%</div></div>
+    <div class="metric"><div class="metric-label">Active Connections</div><div class="metric-val">1,842</div></div>
+  </div>
+  <div class="grid-2" style="margin-bottom:14px">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-activity"></i> Live Traffic (Mbps)</div>
+      <div class="chart-wrap" style="height:200px"><canvas id="liveNet" role="img" aria-label="Live network traffic line chart">Live network traffic data.</canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-radar"></i> Ping Status</div>
+      <div id="ping-list" style="font-family:var(--mono);font-size:12px"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="section-hdr"><div class="section-title">Network Devices</div></div>
+    <table><thead><tr><th>Device</th><th>IP</th><th>Type</th><th>Status</th><th>Latency</th><th>Last Seen</th></tr></thead>
+    <tbody id="net-body"></tbody></table>
+  </div>
+</div>
+
+<!-- ════════════ SSL CERTS ════════════ -->
+<div class="panel" id="panel-ssl">
+  <div class="section-hdr">
+    <div class="section-title">SSL Certificate Tracker</div>
+    <button class="btn btn-primary" onclick="openSSLModal()"><i class="ti ti-plus"></i> Add Certificate</button>
+  </div>
+  <div class="grid-4" style="margin-bottom:14px">
+    <div class="metric"><div class="metric-label">Total Certs</div><div class="metric-val blue" id="ssl-total">0</div></div>
+    <div class="metric"><div class="metric-label">Valid</div><div class="metric-val green" id="ssl-valid">0</div></div>
+    <div class="metric"><div class="metric-label">Expiring &lt;30d</div><div class="metric-val amber" id="ssl-warn">0</div></div>
+    <div class="metric"><div class="metric-label">Expired</div><div class="metric-val red" id="ssl-exp">0</div></div>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table><thead><tr><th>Domain</th><th>Issuer</th><th>Expires</th><th>Days Left</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody id="ssl-body"></tbody></table>
+  </div>
+</div>
+
+<!-- ════════════ HARDWARE ════════════ -->
+<div class="panel" id="panel-hardware">
+  <div class="section-hdr">
+    <div class="section-title">Hardware Inventory</div>
+    <button class="btn btn-primary" onclick="openHWModal()"><i class="ti ti-plus"></i> Add Asset</button>
+  </div>
+  <div class="search-bar">
+    <input type="text" placeholder="Search assets..." id="hw-search" oninput="renderHW()">
+    <select style="width:130px" id="hw-filter" onchange="renderHW()"><option value="">All Types</option><option>Laptop</option><option>Desktop</option><option>Router</option><option>Switch</option><option>Printer</option><option>Other</option></select>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table><thead><tr><th>Asset</th><th>Type</th><th>Assigned To</th><th>Serial No.</th><th>Warranty Exp.</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody id="hw-body"></tbody></table>
+  </div>
+</div>
+
+<!-- ════════════ SOFTWARE ════════════ -->
+<div class="panel" id="panel-software">
+  <div class="section-hdr">
+    <div class="section-title">Software License Management</div>
+    <button class="btn btn-primary" onclick="openSWModal()"><i class="ti ti-plus"></i> Add License</button>
+  </div>
+  <div class="grid-4" style="margin-bottom:14px">
+    <div class="metric"><div class="metric-label">Total Licenses</div><div class="metric-val blue" id="sw-total">0</div></div>
+    <div class="metric"><div class="metric-label">Seats Used</div><div class="metric-val green" id="sw-used">0</div></div>
+    <div class="metric"><div class="metric-label">Available Seats</div><div class="metric-val" id="sw-avail">0</div></div>
+    <div class="metric"><div class="metric-label">Expiring Soon</div><div class="metric-val amber" id="sw-expiring">0</div></div>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table><thead><tr><th>Software</th><th>Vendor</th><th>Seats Total</th><th>Used</th><th>Utilization</th><th>Expires</th><th>Cost/yr</th></tr></thead>
+    <tbody id="sw-body"></tbody></table>
+  </div>
+</div>
+
+<!-- ════════════ VENDORS ════════════ -->
+<div class="panel" id="panel-vendors">
+  <div class="section-hdr">
+    <div class="section-title">Vendor &amp; Contract Tracker</div>
+    <button class="btn btn-primary" onclick="openVendorModal()"><i class="ti ti-plus"></i> Add Vendor</button>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table><thead><tr><th>Vendor</th><th>Service</th><th>Contract End</th><th>Days Left</th><th>Owner</th><th>Cost/yr</th><th>Status</th></tr></thead>
+    <tbody id="vendor-body"></tbody></table>
+  </div>
+</div>
+
+<!-- ════════════ TICKETS ════════════ -->
+<div class="panel" id="panel-tickets">
+  <div class="section-hdr">
+    <div class="section-title">Helpdesk Tickets</div>
+    <button class="btn btn-primary" onclick="openTicketModal()"><i class="ti ti-plus"></i> New Ticket</button>
+  </div>
+  <div class="filter-row">
+    <input type="text" placeholder="Search tickets..." style="width:200px" id="tkt-search" oninput="renderTickets()">
+    <select style="width:120px" id="tkt-status" onchange="renderTickets()"><option value="">All Status</option><option>open</option><option>in-progress</option><option>resolved</option></select>
+    <select style="width:110px" id="tkt-priority" onchange="renderTickets()"><option value="">All Priority</option><option>critical</option><option>high</option><option>medium</option><option>low</option></select>
+  </div>
+  <div id="ticket-list"></div>
+</div>
+
+<!-- ════════════ USER PORTAL ════════════ -->
+<div class="panel" id="panel-userportal">
+  <div class="section-hdr"><div class="section-title">Self-Service Portal</div></div>
+  <div class="grid-3" style="margin-bottom:20px">
+    <div class="card" style="text-align:center;cursor:pointer" onclick="openTicketModal()">
+      <i class="ti ti-ticket" style="font-size:28px;color:var(--blue);margin-bottom:10px"></i>
+      <div style="font-weight:500;margin-bottom:4px">Submit a Ticket</div>
+      <div style="font-size:12px;color:var(--text3)">Report an issue or request</div>
+    </div>
+    <div class="card" style="text-align:center;cursor:pointer">
+      <i class="ti ti-lock-open" style="font-size:28px;color:var(--amber);margin-bottom:10px"></i>
+      <div style="font-weight:500;margin-bottom:4px">Password Reset</div>
+      <div style="font-size:12px;color:var(--text3)">Request account unlock</div>
+    </div>
+    <div class="card" style="text-align:center;cursor:pointer">
+      <i class="ti ti-device-laptop" style="font-size:28px;color:var(--green);margin-bottom:10px"></i>
+      <div style="font-weight:500;margin-bottom:4px">Equipment Request</div>
+      <div style="font-size:12px;color:var(--text3)">Request hardware or software</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><i class="ti ti-help"></i> System Status</div>
+    <div id="portal-status"></div>
+  </div>
+</div>
+
+<!-- ════════════ SECURITY ════════════ -->
+<div class="panel" id="panel-security">
+  <div class="section-hdr"><div class="section-title">Security Overview</div></div>
+  <div class="grid-4" style="margin-bottom:14px">
+    <div class="metric"><div class="metric-label">Failed Logins</div><div class="metric-val red">47</div><div class="metric-sub">last 24h</div></div>
+    <div class="metric"><div class="metric-label">Blocked IPs</div><div class="metric-val amber">12</div><div class="metric-sub">firewall rules</div></div>
+    <div class="metric"><div class="metric-label">Vuln. Patches</div><div class="metric-val amber">8</div><div class="metric-sub">pending</div></div>
+    <div class="metric"><div class="metric-label">Threat Score</div><div class="metric-val green">Low</div><div class="metric-sub">overall risk</div></div>
+  </div>
+  <div class="grid-2" style="margin-bottom:14px">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-login"></i> Failed Login Attempts (7 days)</div>
+      <div class="chart-wrap" style="height:180px"><canvas id="secChart" role="img" aria-label="Bar chart of failed login attempts over 7 days">Failed login data over the past week.</canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-key"></i> Password Audit</div>
+      <div id="pw-audit"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><i class="ti ti-shield-x"></i> Firewall Rule Changes</div>
+    <div id="fw-log"></div>
+  </div>
+</div>
+
+<!-- ════════════ AUDIT LOG ════════════ -->
+<div class="panel" id="panel-audit">
+  <div class="section-hdr"><div class="section-title">Audit Log</div>
+    <button class="btn btn-secondary" onclick="exportCSV()"><i class="ti ti-download"></i> Export Log</button>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table><thead><tr><th>Time</th><th>User</th><th>Action</th><th>Resource</th><th>IP</th><th>Status</th></tr></thead>
+    <tbody id="audit-body"></tbody></table>
+  </div>
+</div>
+
+<!-- ════════════ ON-CALL ════════════ -->
+<div class="panel" id="panel-oncall">
+  <div class="section-hdr">
+    <div class="section-title">On-Call Schedule</div>
+    <button class="btn btn-primary" onclick="openOncallModal()"><i class="ti ti-plus"></i> Add Engineer</button>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-phone-call"></i> Current On-Call</div>
+      <div id="current-oncall"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-calendar"></i> Rotation Schedule</div>
+      <div id="oncall-schedule"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ RUNBOOKS ════════════ -->
+<div class="panel" id="panel-runbooks">
+  <div class="section-hdr">
+    <div class="section-title">Runbooks &amp; Docs</div>
+    <button class="btn btn-primary" onclick="openRunbookModal()"><i class="ti ti-plus"></i> Add Runbook</button>
+  </div>
+  <div class="search-bar">
+    <input type="text" placeholder="Search runbooks..." id="rb-search" oninput="renderRunbooks()">
+    <select style="width:130px" id="rb-filter" onchange="renderRunbooks()"><option value="">All Categories</option><option>Incident</option><option>Maintenance</option><option>Security</option><option>Networking</option></select>
+  </div>
+  <div id="runbook-list"></div>
+</div>
+
+<!-- ════════════ CHANGE REQUESTS ════════════ -->
+<div class="panel" id="panel-changes">
+  <div class="section-hdr">
+    <div class="section-title">Change Request Workflow</div>
+    <button class="btn btn-primary" onclick="openCRModal()"><i class="ti ti-plus"></i> New Change Request</button>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table><thead><tr><th>CR ID</th><th>Title</th><th>Requestor</th><th>Priority</th><th>Scheduled</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody id="cr-body"></tbody></table>
+  </div>
+</div>
+
+<!-- ════════════ MAINTENANCE ════════════ -->
+<div class="panel" id="panel-maintenance">
+  <div class="section-hdr">
+    <div class="section-title">Maintenance Windows</div>
+    <button class="btn btn-primary" onclick="openMWModal()"><i class="ti ti-plus"></i> Schedule Maintenance</button>
+  </div>
+  <div id="mw-list"></div>
+</div>
+
+<!-- ════════════ INTEGRATIONS ════════════ -->
+<div class="panel" id="panel-integrations">
+  <div class="section-hdr"><div class="section-title">Integrations</div></div>
+  <div class="grid-3">
+    <div class="card" id="int-m365" style="cursor:pointer" onclick="toggleIntegration('m365')">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <i class="ti ti-brand-office" style="font-size:24px;color:#d83b01"></i>
+        <div><div style="font-weight:500">Microsoft 365</div><div style="font-size:11px;color:var(--text3)">User sync, Azure AD</div></div>
+        <div style="margin-left:auto" id="m365-badge"><span class="badge green"><i class="ti ti-check"></i> Connected</span></div>
+      </div>
+      <div style="font-size:12px;color:var(--text2)">Sync users from Azure AD, access O365 licenses</div>
+    </div>
+    <div class="card" style="cursor:pointer" onclick="toggleIntegration('slack')">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <i class="ti ti-brand-slack" style="font-size:24px;color:#4a154b"></i>
+        <div><div style="font-weight:500">Slack</div><div style="font-size:11px;color:var(--text3)">Alerts &amp; notifications</div></div>
+        <div style="margin-left:auto" id="slack-badge"><span class="badge green"><i class="ti ti-check"></i> Connected</span></div>
+      </div>
+      <div style="font-size:12px;color:var(--text2)">Send critical alerts and ticket updates to Slack channels</div>
+    </div>
+    <div class="card" style="cursor:pointer" onclick="toggleIntegration('teams')">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <i class="ti ti-brand-teams" style="font-size:24px;color:#464eb8"></i>
+        <div><div style="font-weight:500">Microsoft Teams</div><div style="font-size:11px;color:var(--text3)">Notifications</div></div>
+        <div style="margin-left:auto" id="teams-badge"><span class="badge amber">Configure</span></div>
+      </div>
+      <div style="font-size:12px;color:var(--text2)">Send incident updates and maintenance alerts to Teams</div>
+    </div>
+    <div class="card" style="cursor:pointer" onclick="toggleIntegration('whatsapp')">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <i class="ti ti-brand-whatsapp" style="font-size:24px;color:#25d366"></i>
+        <div><div style="font-weight:500">WhatsApp</div><div style="font-size:11px;color:var(--text3)">Critical SMS alerts</div></div>
+        <div style="margin-left:auto" id="whatsapp-badge"><span class="badge amber">Configure</span></div>
+      </div>
+      <div style="font-size:12px;color:var(--text2)">Send WhatsApp alerts to on-call engineers for P1 incidents</div>
+    </div>
+    <div class="card" style="cursor:pointer" onclick="toggleIntegration('sharepoint')">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <i class="ti ti-brand-sharepoint" style="font-size:24px;color:#0078d4"></i>
+        <div><div style="font-weight:500">SharePoint</div><div style="font-size:11px;color:var(--text3)">Document linking</div></div>
+        <div style="margin-left:auto" id="sharepoint-badge"><span class="badge green"><i class="ti ti-check"></i> Connected</span></div>
+      </div>
+      <div style="font-size:12px;color:var(--text2)">Link runbooks and IT docs directly from SharePoint</div>
+    </div>
+    <div class="card" style="cursor:pointer" onclick="toggleIntegration('email')">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <i class="ti ti-mail" style="font-size:24px;color:var(--blue)"></i>
+        <div><div style="font-weight:500">Email / SMTP</div><div style="font-size:11px;color:var(--text3)">Alert emails</div></div>
+        <div style="margin-left:auto" id="email-badge"><span class="badge green"><i class="ti ti-check"></i> Connected</span></div>
+      </div>
+      <div style="font-size:12px;color:var(--text2)">Send alert and expiry notification emails to stakeholders</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ COSTS ════════════ -->
+<div class="panel" id="panel-costs">
+  <div class="section-hdr"><div class="section-title">Cost Tracking</div></div>
+  <div class="grid-4" style="margin-bottom:14px">
+    <div class="metric"><div class="metric-label">Monthly Spend</div><div class="metric-val blue">$12,450</div></div>
+    <div class="metric"><div class="metric-label">Annual Forecast</div><div class="metric-val">$149,400</div></div>
+    <div class="metric"><div class="metric-label">vs Budget</div><div class="metric-val green">-8%</div><div class="metric-sub">Under budget</div></div>
+    <div class="metric"><div class="metric-label">Vendors</div><div class="metric-val" id="cost-vendors">0</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-chart-pie"></i> Spend by Category</div>
+      <div class="chart-wrap" style="height:220px"><canvas id="costChart" role="img" aria-label="Pie chart of IT spend by category">IT spending categories.</canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-coin"></i> Top Vendors by Cost</div>
+      <div id="vendor-costs"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ REPORTS ════════════ -->
+<div class="panel" id="panel-reports">
+  <div class="section-hdr"><div class="section-title">Reports &amp; Analytics</div></div>
+  <div class="grid-2" style="margin-bottom:14px">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-chart-bar"></i> Monthly Uptime % (last 6 months)</div>
+      <div class="chart-wrap" style="height:200px"><canvas id="uptimeChart" role="img" aria-label="Bar chart of monthly uptime percentage">Monthly uptime data.</canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-trending-up"></i> Ticket Resolution Time (avg days)</div>
+      <div class="chart-wrap" style="height:200px"><canvas id="resTimeChart" role="img" aria-label="Line chart of average ticket resolution time">Ticket resolution trends.</canvas></div>
+    </div>
+  </div>
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-file-analytics"></i> Generate Reports</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <button class="btn btn-secondary" style="justify-content:flex-start" onclick="alert('Generating monthly uptime report...')"><i class="ti ti-download"></i> Monthly Uptime Report</button>
+        <button class="btn btn-secondary" style="justify-content:flex-start" onclick="alert('Generating ticket report...')"><i class="ti ti-download"></i> Ticket Resolution Report</button>
+        <button class="btn btn-secondary" style="justify-content:flex-start" onclick="alert('Generating cost report...')"><i class="ti ti-download"></i> Cost Analysis Report</button>
+        <button class="btn btn-secondary" style="justify-content:flex-start" onclick="alert('Generating security report...')"><i class="ti ti-download"></i> Security Audit Report</button>
       </div>
     </div>
-    <div class="content">
-      <div id="view-dashboard">
-        <div class="metrics">
-          <div class="metric-card">
-            <div class="metric-label"><i class="ti ti-server" style="font-size:14px;color:#60a5fa"></i> Servers Online</div>
-            <div class="metric-value" id="m-servers">-/-</div>
-            <div class="metric-delta" id="d-servers">Loading...</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label"><i class="ti ti-cpu" style="font-size:14px;color:#4ade80"></i> Avg CPU</div>
-            <div class="metric-value" id="m-cpu">--%</div>
-            <div class="bar-track"><div class="bar-fill" id="b-cpu" style="width:0%;background:#4ade80"></div></div>
-            <div class="metric-delta" id="d-cpu">Loading...</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label"><i class="ti ti-database" style="font-size:14px;color:#fbbf24"></i> Avg Memory</div>
-            <div class="metric-value" id="m-mem">--%</div>
-            <div class="bar-track"><div class="bar-fill" id="b-mem" style="width:0%;background:#fbbf24"></div></div>
-            <div class="metric-delta" id="d-mem">Loading...</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label"><i class="ti ti-bell" style="font-size:14px;color:#f87171"></i> Active Alerts</div>
-            <div class="metric-value" id="m-alerts">0</div>
-            <div class="metric-delta" id="d-alerts">All systems normal</div>
-          </div>
-        </div>
-        <div class="ai-panel">
-          <div class="ai-header"><i class="ti ti-sparkles" style="font-size:15px;color:#60a5fa"></i> AI Assistant</div>
-          <div class="ai-msgs" id="ai-msgs"><div class="msg msg-ai">Connected to Render. I can see real metrics from all your servers. Ask me anything!</div></div>
-          <div class="ai-row">
-            <input class="ai-inp" id="ai-inp" placeholder="Ask about servers, CPU, memory..." onkeydown="if(event.key==='Enter')sendAI()"/>
-            <button class="send-btn" onclick="sendAI()"><i class="ti ti-send"></i></button>
-          </div>
-        </div>
-        <div class="panel">
-          <div class="panel-title">All Servers <span class="live-dot"></span></div>
-          <table class="table">
-            <thead><tr><th>Server</th><th>CPU</th><th>Memory</th><th>Disk</th><th>Status</th></tr></thead>
-            <tbody id="servers-table"><tr><td colspan="5" style="text-align:center;color:#475569;padding:20px">Loading...</td></tr></tbody>
-          </table>
-        </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-trophy"></i> SLA Compliance</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Critical Tickets</span><span style="color:var(--green)">94%</span></div><div class="prog-bar"><div class="prog-fill green" style="width:94%"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>High Priority</span><span style="color:var(--green)">88%</span></div><div class="prog-bar"><div class="prog-fill green" style="width:88%"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Medium Priority</span><span style="color:var(--amber)">76%</span></div><div class="prog-bar"><div class="prog-fill amber" style="width:76%"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Low Priority</span><span style="color:var(--blue)">99%</span></div><div class="prog-bar"><div class="prog-fill blue" style="width:99%"></div></div></div>
       </div>
-      <div id="view-servers" style="display:none">
-        <div class="srv-grid" id="srv-grid"></div>
-      </div>
-      <div id="view-alerts" style="display:none">
-        <div class="panel">
-          <div class="panel-title">Active Alerts <span id="alerts-count">0 open</span></div>
-          <div id="alerts-body"></div>
-        </div>
-      </div>
-      <div id="view-agent" style="display:none">
-        <div class="panel">
-          <div class="panel-title">Agent Installer <span>Deploy to any Windows server</span></div>
-          <div style="background:#1e293b;border-radius:10px;padding:20px;margin-bottom:20px">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-              <div>
-                <div style="font-size:14px;font-weight:600;color:#e2e8f0">ITAgent-Setup.bat</div>
-                <div style="font-size:12px;color:#64748b;margin-top:2px">One-click installer for any Windows server</div>
-              </div>
-              <button onclick="downloadAgent()" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:#2563eb;color:#fff"><i class="ti ti-download"></i> Download</button>
-            </div>
-            <div style="background:#0f1117;border-radius:8px;padding:12px;font-size:12px;color:#64748b;line-height:2">
-              <i class="ti ti-check" style="color:#4ade80"></i> Downloads windows_exporter automatically<br>
-              <i class="ti ti-check" style="color:#4ade80"></i> Installs and starts monitoring service<br>
-              <i class="ti ti-check" style="color:#4ade80"></i> Opens firewall port 9182
-            </div>
-          </div>
-          <div style="border-top:1px solid #1e2d40;padding-top:16px">
-            <div style="font-size:13px;font-weight:600;color:#e2e8f0;margin-bottom:12px">Registered Servers</div>
-            <div id="reg-servers"></div>
-          </div>
-        </div>
-      </div>
-      <div id="view-settings" style="display:none">
-        <div class="panel" style="max-width:480px">
-          <div class="panel-title">Pushgateway Connection</div>
-          <div style="display:flex;flex-direction:column;gap:12px">
-            <div>
-              <div style="font-size:12px;color:#64748b;margin-bottom:6px">Pushgateway URL (Render)</div>
-              <div style="display:flex;gap:8px">
-                <input id="prom-url-inp" style="flex:1;font-size:13px;padding:8px 12px;border:1px solid #1e2d40;border-radius:8px;background:#1e293b;color:#e2e8f0;outline:none"/>
-                <button onclick="saveUrl()" style="background:#2563eb;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer">Connect</button>
-              </div>
-            </div>
-            <div style="padding:12px;background:#1e293b;border-radius:8px;font-size:12px">
-              <div style="font-weight:600;color:#94a3b8;margin-bottom:4px">Status</div>
-              <div id="set-status" style="color:#64748b">Checking...</div>
-            </div>
-          </div>
-        </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-server"></i> Infrastructure Health</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Server Uptime</span><span style="color:var(--green)">99.7%</span></div><div class="prog-bar"><div class="prog-fill green" style="width:99.7%"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Network Health</span><span style="color:var(--green)">98.2%</span></div><div class="prog-bar"><div class="prog-fill green" style="width:98.2%"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Security Score</span><span style="color:var(--amber)">81%</span></div><div class="prog-bar"><div class="prog-fill amber" style="width:81%"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Backup Success</span><span style="color:var(--green)">100%</span></div><div class="prog-bar"><div class="prog-fill green" style="width:100%"></div></div></div>
       </div>
     </div>
   </div>
 </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /shell -->
+
+<!-- ════════════ MODALS ════════════ -->
+<div class="modal-overlay" id="modal-server">
+  <div class="modal">
+    <div class="modal-title">Add Server <span class="modal-close" onclick="closeModal('modal-server')"><i class="ti ti-x"></i></span></div>
+    <div class="form-row"><label class="form-label">Server Name</label><input id="srv-name" placeholder="prod-web-01"></div>
+    <div class="form-row"><label class="form-label">IP Address</label><input id="srv-ip" placeholder="192.168.1.10"></div>
+    <div class="grid-2"><div class="form-row"><label class="form-label">Type</label><select id="srv-type"><option>Web</option><option>Database</option><option>Mail</option><option>File</option><option>Backup</option><option>DNS</option></select></div>
+    <div class="form-row"><label class="form-label">Status</label><select id="srv-status"><option>online</option><option>offline</option><option>warning</option></select></div></div>
+    <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-primary" onclick="addServer()"><i class="ti ti-plus"></i> Add Server</button><button class="btn btn-secondary" onclick="closeModal('modal-server')">Cancel</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-ticket">
+  <div class="modal">
+    <div class="modal-title">New Ticket <span class="modal-close" onclick="closeModal('modal-ticket')"><i class="ti ti-x"></i></span></div>
+    <div class="form-row"><label class="form-label">Title</label><input id="tkt-title" placeholder="Brief description of issue"></div>
+    <div class="form-row"><label class="form-label">Description</label><textarea id="tkt-desc" placeholder="Detailed description..."></textarea></div>
+    <div class="grid-2">
+      <div class="form-row"><label class="form-label">Priority</label><select id="tkt-pri"><option>low</option><option>medium</option><option selected>high</option><option>critical</option></select></div>
+      <div class="form-row"><label class="form-label">Category</label><select id="tkt-cat"><option>Hardware</option><option>Software</option><option>Network</option><option>Security</option><option>Access</option><option>Other</option></select></div>
+    </div>
+    <div class="form-row"><label class="form-label">Assigned To</label><input id="tkt-assign" placeholder="Engineer name"></div>
+    <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-primary" onclick="addTicket()"><i class="ti ti-plus"></i> Create Ticket</button><button class="btn btn-secondary" onclick="closeModal('modal-ticket')">Cancel</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-ssl">
+  <div class="modal">
+    <div class="modal-title">Add SSL Certificate <span class="modal-close" onclick="closeModal('modal-ssl')"><i class="ti ti-x"></i></span></div>
+    <div class="form-row"><label class="form-label">Domain</label><input id="ssl-domain" placeholder="example.com"></div>
+    <div class="form-row"><label class="form-label">Issuer</label><input id="ssl-issuer" placeholder="Let's Encrypt / Comodo / etc."></div>
+    <div class="form-row"><label class="form-label">Expiry Date</label><input type="date" id="ssl-expiry"></div>
+    <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-primary" onclick="addSSL()"><i class="ti ti-plus"></i> Add Certificate</button><button class="btn btn-secondary" onclick="closeModal('modal-ssl')">Cancel</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-hw">
+  <div class="modal">
+    <div class="modal-title">Add Hardware Asset <span class="modal-close" onclick="closeModal('modal-hw')"><i class="ti ti-x"></i></span></div>
+    <div class="form-row"><label class="form-label">Asset Name / Model</label><input id="hw-name" placeholder="Dell Latitude 5540"></div>
+    <div class="grid-2">
+      <div class="form-row"><label class="form-label">Type</label><select id="hw-type"><option>Laptop</option><option>Desktop</option><option>Router</option><option>Switch</option><option>Printer</option><option>Other</option></select></div>
+      <div class="form-row"><label class="form-label">Assigned To</label><input id="hw-assign" placeholder="Employee name"></div>
+    </div>
+    <div class="form-row"><label class="form-label">Serial Number</label><input id="hw-serial" placeholder="SN-XXXXXXX"></div>
+    <div class="form-row"><label class="form-label">Warranty Expiry</label><input type="date" id="hw-warranty"></div>
+    <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-primary" onclick="addHW()"><i class="ti ti-plus"></i> Add Asset</button><button class="btn btn-secondary" onclick="closeModal('modal-hw')">Cancel</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-sw">
+  <div class="modal">
+    <div class="modal-title">Add Software License <span class="modal-close" onclick="closeModal('modal-sw')"><i class="ti ti-x"></i></span></div>
+    <div class="form-row"><label class="form-label">Software Name</label><input id="sw-name" placeholder="Microsoft 365"></div>
+    <div class="form-row"><label class="form-label">Vendor</label><input id="sw-vendor" placeholder="Microsoft"></div>
+    <div class="grid-2">
+      <div class="form-row"><label class="form-label">Total Seats</label><input type="number" id="sw-seats" placeholder="50"></div>
+      <div class="form-row"><label class="form-label">Used Seats</label><input type="number" id="sw-used-seats" placeholder="42"></div>
+    </div>
+    <div class="grid-2">
+      <div class="form-row"><label class="form-label">Expiry Date</label><input type="date" id="sw-expiry"></div>
+      <div class="form-row"><label class="form-label">Cost/year ($)</label><input type="number" id="sw-cost" placeholder="5000"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-primary" onclick="addSW()"><i class="ti ti-plus"></i> Add License</button><button class="btn btn-secondary" onclick="closeModal('modal-sw')">Cancel</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-vendor">
+  <div class="modal">
+    <div class="modal-title">Add Vendor <span class="modal-close" onclick="closeModal('modal-vendor')"><i class="ti ti-x"></i></span></div>
+    <div class="grid-2">
+      <div class="form-row"><label class="form-label">Vendor Name</label><input id="v-name" placeholder="Cisco"></div>
+      <div class="form-row"><label class="form-label">Service</label><input id="v-service" placeholder="Network hardware"></div>
+    </div>
+    <div class="grid-2">
+      <div class="form-row"><label class="form-label">Contract End</label><input type="date" id="v-expiry"></div>
+      <div class="form-row"><label class="form-label">Owner</label><input id="v-owner" placeholder="IT Manager"></div>
+    </div>
+    <div class="form-row"><label class="form-label">Annual Cost ($)</label><input type="number" id="v-cost" placeholder="12000"></div>
+    <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-primary" onclick="addVendor()"><i class="ti ti-plus"></i> Add Vendor</button><button class="btn btn-secondary" onclick="closeModal('modal-vendor')">Cancel</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-runbook">
+  <div class="modal">
+    <div class="modal-title">Add Runbook <span class="modal-close" onclick="closeModal('modal-runbook')"><i class="ti ti-x"></i></span></div>
+    <div class="form-row"><label class="form-label">Title</label><input id="rb-title" placeholder="Server restart procedure"></div>
+    <div class="form-row"><label class="form-label">Category</label><select id="rb-cat"><option>Incident</option><option>Maintenance</option><option>Security</option><option>Networking</option></select></div>
+    <div class="form-row"><label class="form-label">Steps / Notes</label><textarea id="rb-steps" placeholder="Step 1: ...\nStep 2: ..."></textarea></div>
+    <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-primary" onclick="addRunbook()"><i class="ti ti-plus"></i> Add Runbook</button><button class="btn btn-secondary" onclick="closeModal('modal-runbook')">Cancel</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-cr">
+  <div class="modal">
+    <div class="modal-title">New Change Request <span class="modal-close" onclick="closeModal('modal-cr')"><i class="ti ti-x"></i></span></div>
+    <div class="form-row"><label class="form-label">Title</label><input id="cr-title" placeholder="Firewall rule update"></div>
+    <div class="form-row"><label class="form-label">Description</label><textarea id="cr-desc"></textarea></div>
+    <div class="grid-2">
+      <div class="form-row"><label class="form-label">Requestor</label><input id="cr-req" placeholder="Your name"></div>
+      <div class="form-row"><label class="form-label">Priority</label><select id="cr-pri"><option>low</option><option>medium</option><option>high</option><option>critical</option></select></div>
+    </div>
+    <div class="form-row"><label class="form-label">Scheduled Date</label><input type="date" id="cr-date"></div>
+    <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-primary" onclick="addCR()"><i class="ti ti-plus"></i> Submit</button><button class="btn btn-secondary" onclick="closeModal('modal-cr')">Cancel</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-mw">
+  <div class="modal">
+    <div class="modal-title">Schedule Maintenance <span class="modal-close" onclick="closeModal('modal-mw')"><i class="ti ti-x"></i></span></div>
+    <div class="form-row"><label class="form-label">Title</label><input id="mw-title" placeholder="Monthly patching window"></div>
+    <div class="form-row"><label class="form-label">Systems Affected</label><input id="mw-systems" placeholder="All web servers"></div>
+    <div class="grid-2">
+      <div class="form-row"><label class="form-label">Start</label><input type="datetime-local" id="mw-start"></div>
+      <div class="form-row"><label class="form-label">End</label><input type="datetime-local" id="mw-end"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-primary" onclick="addMW()"><i class="ti ti-plus"></i> Schedule</button><button class="btn btn-secondary" onclick="closeModal('modal-mw')">Cancel</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-oncall">
+  <div class="modal">
+    <div class="modal-title">Add On-Call Engineer <span class="modal-close" onclick="closeModal('modal-oncall')"><i class="ti ti-x"></i></span></div>
+    <div class="form-row"><label class="form-label">Name</label><input id="oc-name" placeholder="Engineer name"></div>
+    <div class="form-row"><label class="form-label">Phone</label><input id="oc-phone" placeholder="+1 555 000 0000"></div>
+    <div class="grid-2">
+      <div class="form-row"><label class="form-label">Week Start</label><input type="date" id="oc-start"></div>
+      <div class="form-row"><label class="form-label">Week End</label><input type="date" id="oc-end"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-primary" onclick="addOncall()"><i class="ti ti-plus"></i> Add</button><button class="btn btn-secondary" onclick="closeModal('modal-oncall')">Cancel</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-quickadd">
+  <div class="modal">
+    <div class="modal-title">Quick Add <span class="modal-close" onclick="closeModal('modal-quickadd')"><i class="ti ti-x"></i></span></div>
+    <div class="grid-2">
+      <button class="btn btn-secondary" style="justify-content:center;padding:14px" onclick="closeModal('modal-quickadd');nav('tickets');openTicketModal()"><i class="ti ti-ticket" style="font-size:20px"></i><br>New Ticket</button>
+      <button class="btn btn-secondary" style="justify-content:center;padding:14px" onclick="closeModal('modal-quickadd');nav('servers');openServerModal()"><i class="ti ti-server" style="font-size:20px"></i><br>Add Server</button>
+      <button class="btn btn-secondary" style="justify-content:center;padding:14px" onclick="closeModal('modal-quickadd');nav('hardware');openHWModal()"><i class="ti ti-device-laptop" style="font-size:20px"></i><br>Add Asset</button>
+      <button class="btn btn-secondary" style="justify-content:center;padding:14px" onclick="closeModal('modal-quickadd');nav('changes');openCRModal()"><i class="ti ti-git-merge" style="font-size:20px"></i><br>Change Request</button>
+    </div>
+  </div>
+</div>
+
 <script>
-var GURL = localStorage.getItem('pgUrl') || 'https://it-dashboard-sgkf.onrender.com';
-var allAlerts = [];
-var serverData = [];
-var BAT = "@echo off\nsetlocal\ntitle IT Command Agent Setup\ncolor 0A\nset PORT=9182\nset VER=0.31.6\nset DIR=C:\\ITAgent\nset MSI=%DIR%\\agent.msi\nset URL=https://github.com/prometheus-community/windows_exporter/releases/download/v%VER%/windows_exporter-%VER%-amd64.msi\ncls\necho IT Command Agent Setup - Noor Capital\necho =======================================\nnet session >nul 2>&1\nif %errorLevel% neq 0 (echo ERROR: Run as Administrator & pause & exit /b 1)\nif not exist \"%DIR%\" mkdir \"%DIR%\"\necho [1/5] Downloading...\npowershell -NoProfile -ExecutionPolicy Bypass -Command \"(New-Object Net.WebClient).DownloadFile('%URL%','%MSI%')\"\nif not exist \"%MSI%\" (echo ERROR: Download failed & pause & exit /b 1)\necho [2/5] Installing...\nmsiexec /i \"%MSI%\" /quiet /norestart ENABLED_COLLECTORS=\"cpu,cs,logical_disk,memory,net,os,service,system\" LISTEN_PORT=%PORT%\ntimeout /t 4 /nobreak >nul\necho [3/5] Fixing service...\nreg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\windows_exporter\" /v ImagePath /t REG_EXPAND_SZ /d \"\\\"C:\\Program Files\\windows_exporter\\windows_exporter.exe\\\" --web.listen-address=:%PORT%\" /f >nul 2>&1\nnet stop windows_exporter >nul 2>&1\ntimeout /t 2 /nobreak >nul\nnet start windows_exporter >nul 2>&1\ntimeout /t 3 /nobreak >nul\necho [4/5] Firewall...\nnetsh advfirewall firewall add rule name=\"IT Command Agent\" dir=in action=allow protocol=TCP localport=%PORT% >nul 2>&1\necho [5/5] Getting IP...\nfor /f \"tokens=2 delims=:\" %%a in ('ipconfig ^| findstr /c:\"IPv4 Address\"') do (set IP=%%a & goto done)\n:done\nset IP=%IP: =%\ncls\necho Setup Complete!\necho Computer: %COMPUTERNAME%\necho IP: %IP%\necho Metrics: http://%IP%:%PORT%/metrics\npause";
+// ── STATE ──
+let servers=[
+  {id:1,name:'prod-web-01',ip:'10.0.1.10',type:'Web',status:'online',cpu:62,ram:74,uptime:'99.97%'},
+  {id:2,name:'prod-web-02',ip:'10.0.1.11',type:'Web',status:'online',cpu:55,ram:68,uptime:'99.92%'},
+  {id:3,name:'prod-db-01',ip:'10.0.2.10',type:'Database',status:'online',cpu:78,ram:88,uptime:'99.99%'},
+  {id:4,name:'prod-db-02',ip:'10.0.2.11',type:'Database',status:'warning',cpu:91,ram:95,uptime:'98.5%'},
+  {id:5,name:'mail-01',ip:'10.0.3.10',type:'Mail',status:'online',cpu:28,ram:44,uptime:'99.95%'},
+  {id:6,name:'backup-01',ip:'10.0.4.10',type:'Backup',status:'offline',cpu:0,ram:0,uptime:'0%'},
+];
+let tickets=[
+  {id:'TKT-001',title:'Email not working for finance dept',priority:'critical',category:'Software',status:'open',assignee:'Ahmed Al-Rashid',created:'2026-05-14',sla:95},
+  {id:'TKT-002',title:'VPN connection dropping intermittently',priority:'high',category:'Network',status:'in-progress',assignee:'Sara Khalid',created:'2026-05-13',sla:60},
+  {id:'TKT-003',title:'Printer offline in HR room',priority:'medium',category:'Hardware',status:'open',assignee:'Unassigned',created:'2026-05-12',sla:30},
+  {id:'TKT-004',title:'New employee laptop setup',priority:'low',category:'Hardware',status:'resolved',assignee:'Ahmed Al-Rashid',created:'2026-05-11',sla:100},
+  {id:'TKT-005',title:'Active Directory password policy update',priority:'high',category:'Security',status:'open',assignee:'Mohamed Nasser',created:'2026-05-15',sla:80},
+  {id:'TKT-006',title:'SharePoint permissions issue',priority:'medium',category:'Access',status:'in-progress',assignee:'Sara Khalid',created:'2026-05-10',sla:45},
+  {id:'TKT-007',title:'Backup job failing on prod-backup-01',priority:'critical',category:'Software',status:'open',assignee:'Mohamed Nasser',created:'2026-05-15',sla:100},
+];
+let sslCerts=[
+  {id:1,domain:'company.com',issuer:"Let's Encrypt",expiry:'2026-06-10'},
+  {id:2,domain:'mail.company.com',issuer:"Let's Encrypt",expiry:'2026-05-25'},
+  {id:3,domain:'vpn.company.com',issuer:'Comodo',expiry:'2026-11-30'},
+  {id:4,domain:'api.company.com',issuer:'DigiCert',expiry:'2027-03-15'},
+  {id:5,domain:'legacy.company.com',issuer:'Comodo',expiry:'2026-05-10'},
+];
+let hardware=[
+  {id:1,name:'Dell Latitude 5540',type:'Laptop',assignee:'Fatima Al-Zaabi',serial:'DLL-58291',warranty:'2027-06-01',status:'Active'},
+  {id:2,name:'Cisco Catalyst 2960',type:'Switch',assignee:'Server Room',serial:'CSC-74820',warranty:'2026-08-15',status:'Active'},
+  {id:3,name:'HP LaserJet Pro',type:'Printer',assignee:'HR Department',serial:'HPL-33912',warranty:'2025-11-01',status:'Expired'},
+  {id:4,name:'MacBook Pro 14"',type:'Laptop',assignee:'Rania Saleh',serial:'APL-99123',warranty:'2027-01-20',status:'Active'},
+  {id:5,name:'Ubiquiti EdgeRouter',type:'Router',assignee:'Network Rack',serial:'UBQ-44710',warranty:'2028-03-10',status:'Active'},
+];
+let software=[
+  {id:1,name:'Microsoft 365',vendor:'Microsoft',seats:100,used:87,expiry:'2027-01-15',cost:12000},
+  {id:2,name:'Adobe Creative Cloud',vendor:'Adobe',seats:20,used:18,expiry:'2026-08-01',cost:8400},
+  {id:3,name:'Cisco AnyConnect',vendor:'Cisco',seats:200,used:156,expiry:'2026-06-30',cost:4500},
+  {id:4,name:'Sophos Endpoint',vendor:'Sophos',seats:150,used:142,expiry:'2026-05-28',cost:3600},
+  {id:5,name:'Zoom Business',vendor:'Zoom',seats:50,used:44,expiry:'2027-03-01',cost:2400},
+];
+let vendors=[
+  {id:1,vendor:'Cisco Systems',service:'Network hardware & support',expiry:'2026-09-30',owner:'IT Manager',cost:24000},
+  {id:2,vendor:'Microsoft',service:'O365, Azure, licensing',expiry:'2027-01-15',owner:'IT Manager',cost:18000},
+  {id:3,vendor:'Sophos',service:'Endpoint security',expiry:'2026-05-28',owner:'Security Team',cost:7200},
+  {id:4,vendor:'Veeam',service:'Backup & recovery',expiry:'2026-07-01',owner:'IT Manager',cost:5400},
+  {id:5,vendor:'AWS',service:'Cloud hosting',expiry:'2026-12-31',owner:'Dev Team',cost:36000},
+];
+let runbooks=[
+  {id:1,title:'Server restart procedure',category:'Maintenance',steps:'1. Notify users\n2. Drain load balancer\n3. Restart service\n4. Verify health check\n5. Re-add to load balancer',author:'Ahmed Al-Rashid',updated:'2026-04-10'},
+  {id:2,title:'P1 incident response',category:'Incident',steps:'1. Create bridge call\n2. Assign incident commander\n3. Engage on-call engineers\n4. Update status page\n5. Post-mortem within 48h',author:'Mohamed Nasser',updated:'2026-05-01'},
+  {id:3,title:'Firewall rule change process',category:'Security',steps:'1. Submit change request\n2. Get approval from IT Manager\n3. Schedule maintenance window\n4. Apply change\n5. Test and document',author:'Sara Khalid',updated:'2026-03-22'},
+  {id:4,title:'VPN troubleshooting guide',category:'Networking',steps:'1. Check client version\n2. Verify certificate validity\n3. Test connectivity to gateway\n4. Check firewall rules\n5. Escalate if unresolved',author:'Ahmed Al-Rashid',updated:'2026-04-28'},
+];
+let changeRequests=[
+  {id:'CR-001',title:'Upgrade core switch firmware',requestor:'Mohamed Nasser',priority:'high',scheduled:'2026-05-20',status:'pending'},
+  {id:'CR-002',title:'Add firewall rule for new app',requestor:'Dev Team',priority:'medium',scheduled:'2026-05-18',status:'approved'},
+  {id:'CR-003',title:'Migrate email to new server',requestor:'IT Manager',priority:'critical',scheduled:'2026-05-25',status:'pending'},
+];
+let maintenanceWindows=[
+  {id:1,title:'Monthly patching - web servers',systems:'prod-web-01, prod-web-02',start:'2026-05-20T02:00',end:'2026-05-20T06:00'},
+  {id:2,title:'Database backup optimization',systems:'prod-db-01, prod-db-02',start:'2026-05-22T23:00',end:'2026-05-23T01:00'},
+];
+let oncallList=[
+  {id:1,name:'Ahmed Al-Rashid',phone:'+971 55 123 4567',start:'2026-05-13',end:'2026-05-19',color:'#58a6ff'},
+  {id:2,name:'Sara Khalid',phone:'+971 50 987 6543',start:'2026-05-20',end:'2026-05-26',color:'#3fb950'},
+  {id:3,name:'Mohamed Nasser',phone:'+971 55 456 7890',start:'2026-05-27',end:'2026-06-02',color:'#bc8cff'},
+];
+let alerts=[
+  {id:1,type:'critical',title:'prod-db-02 RAM usage at 95%',time:'5 min ago',read:false},
+  {id:2,type:'critical',title:'Backup job failed on backup-01',time:'12 min ago',read:false},
+  {id:3,type:'warning',title:'SSL cert for mail.company.com expires in 10 days',time:'1 hour ago',read:false},
+  {id:4,type:'warning',title:'Sophos license expires in 13 days',time:'2 hours ago',read:true},
+  {id:5,type:'info',title:'Scheduled maintenance window in 5 days',time:'3 hours ago',read:true},
+  {id:6,type:'success',title:'prod-web-01 health check passed',time:'6 hours ago',read:true},
+];
+let auditLog=[
+  {time:'2026-05-15 09:42',user:'Ahmed Al-Rashid',action:'Login',resource:'Dashboard',ip:'10.0.1.55',status:'success'},
+  {time:'2026-05-15 09:38',user:'admin',action:'Create Ticket',resource:'TKT-007',ip:'10.0.1.55',status:'success'},
+  {time:'2026-05-15 08:15',user:'Sara Khalid',action:'Login',resource:'Dashboard',ip:'10.0.2.12',status:'success'},
+  {time:'2026-05-15 07:50',user:'unknown',action:'Login Attempt',resource:'VPN Gateway',ip:'185.220.101.42',status:'failed'},
+  {time:'2026-05-14 23:11',user:'backup-agent',action:'Backup Job',resource:'prod-db-01',ip:'10.0.4.10',status:'success'},
+  {time:'2026-05-14 22:30',user:'backup-agent',action:'Backup Job',resource:'backup-01',ip:'10.0.4.10',status:'failed'},
+];
+let nextId={server:7,ticket:8,ssl:6,hw:6,sw:6,vendor:6,rb:5,cr:4,mw:3,oc:4};
 
-var VIEWS = ['dashboard','servers','alerts','agent','settings'];
-var TITLES = {dashboard:'Dashboard',servers:'Servers',alerts:'Alerts',agent:'Agent Installer',settings:'Settings'};
-
-function switchView(v,el){
-  VIEWS.forEach(function(id){
-    var e=document.getElementById('view-'+id);
-    if(e) e.style.display='none';
-  });
-  var t=document.getElementById('view-'+v);
-  if(t) t.style.display='';
-  document.getElementById('page-title').textContent=TITLES[v]||v;
-  document.querySelectorAll('.nav-item').forEach(function(i){i.classList.remove('active');});
-  if(el) el.classList.add('active');
-  if(v==='agent') renderReg();
+// ── NAV ──
+const pages={dashboard:'Dashboard',alerts:'Alerts',servers:'Servers',network:'Network',ssl:'SSL Certificates',hardware:'Hardware Inventory',software:'Software Licenses',vendors:'Vendors',tickets:'Tickets',userportal:'User Portal',security:'Security',audit:'Audit Log',oncall:'On-Call Schedule',runbooks:'Runbooks',changes:'Change Requests',maintenance:'Maintenance Windows',integrations:'Integrations',costs:'Cost Tracking',reports:'Reports'};
+function nav(p){
+  document.querySelectorAll('.panel').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  document.getElementById('panel-'+p).classList.add('active');
+  document.getElementById('page-title').textContent=pages[p]||p;
+  document.querySelectorAll('.nav-item').forEach(el=>{if(el.getAttribute('onclick')===`nav('${p}')`)el.classList.add('active')});
+  if(p==='servers')renderServers();
+  if(p==='tickets')renderTickets();
+  if(p==='ssl')renderSSL();
+  if(p==='hardware')renderHW();
+  if(p==='software')renderSW();
+  if(p==='vendors')renderVendors();
+  if(p==='alerts')renderAlerts();
+  if(p==='audit')renderAudit();
+  if(p==='oncall')renderOncall();
+  if(p==='runbooks')renderRunbooks();
+  if(p==='changes')renderCR();
+  if(p==='maintenance')renderMW();
+  if(p==='network')renderNetwork();
+  if(p==='security')initSecurity();
+  if(p==='userportal')renderPortal();
+  if(p==='costs')renderCosts();
 }
 
-function saveUrl(){
-  GURL=document.getElementById('prom-url-inp').value.trim();
-  localStorage.setItem('pgUrl',GURL);
-  fetchAll();
+// ── CLOCK ──
+setInterval(()=>{document.getElementById('clock').textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'})},1000);
+
+// ── HELPERS ──
+function daysBetween(d){return Math.ceil((new Date(d)-new Date())/86400000)}
+function fmt(n){return n.toLocaleString()}
+function priBadge(p){const m={critical:'red',high:'amber',medium:'blue',low:'purple'};return`<span class="badge ${m[p]||'blue'}">${p}</span>`}
+function statusBadge(s){const m={online:'green',offline:'red',warning:'amber','in-progress':'blue',open:'amber',resolved:'green',approved:'green',pending:'amber',rejected:'red'};return`<span class="badge ${m[s]||'blue'}">${s}</span>`}
+
+// ── MODALS ──
+function openServerModal(){document.getElementById('modal-server').classList.add('open')}
+function openTicketModal(){document.getElementById('modal-ticket').classList.add('open')}
+function openSSLModal(){document.getElementById('modal-ssl').classList.add('open')}
+function openHWModal(){document.getElementById('modal-hw').classList.add('open')}
+function openSWModal(){document.getElementById('modal-sw').classList.add('open')}
+function openVendorModal(){document.getElementById('modal-vendor').classList.add('open')}
+function openRunbookModal(){document.getElementById('modal-runbook').classList.add('open')}
+function openCRModal(){document.getElementById('modal-cr').classList.add('open')}
+function openMWModal(){document.getElementById('modal-mw').classList.add('open')}
+function openOncallModal(){document.getElementById('modal-oncall').classList.add('open')}
+function openAlertModal(){alerts.unshift({id:Date.now(),type:'info',title:'Test alert triggered manually',time:'just now',read:false});renderAlerts();document.getElementById('nb-alerts').textContent=alerts.filter(a=>!a.read).length}
+function openQuickAdd(){document.getElementById('modal-quickadd').classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+
+// ── ADD FUNCTIONS ──
+function addServer(){
+  const n=document.getElementById('srv-name').value.trim();
+  const ip=document.getElementById('srv-ip').value.trim();
+  if(!n||!ip)return alert('Name and IP required');
+  servers.push({id:nextId.server++,name:n,ip,type:document.getElementById('srv-type').value,status:document.getElementById('srv-status').value,cpu:Math.floor(Math.random()*60)+10,ram:Math.floor(Math.random()*50)+30,uptime:'100%'});
+  renderServers();closeModal('modal-server');
+  document.getElementById('srv-name').value='';document.getElementById('srv-ip').value='';
+}
+function addTicket(){
+  const t=document.getElementById('tkt-title').value.trim();
+  if(!t)return alert('Title required');
+  const id='TKT-00'+nextId.ticket++;
+  tickets.unshift({id,title:t,priority:document.getElementById('tkt-pri').value,category:document.getElementById('tkt-cat').value,status:'open',assignee:document.getElementById('tkt-assign').value||'Unassigned',created:new Date().toISOString().split('T')[0],sla:100});
+  const oc=tickets.filter(x=>x.status!=='resolved').length;
+  document.getElementById('nb-tickets').textContent=oc;
+  document.getElementById('dash-tickets').textContent=oc;
+  renderTickets();closeModal('modal-ticket');
+  document.getElementById('tkt-title').value='';document.getElementById('tkt-desc').value='';document.getElementById('tkt-assign').value='';
+}
+function addSSL(){
+  const d=document.getElementById('ssl-domain').value.trim();
+  if(!d)return alert('Domain required');
+  sslCerts.push({id:nextId.ssl++,domain:d,issuer:document.getElementById('ssl-issuer').value||'Unknown',expiry:document.getElementById('ssl-expiry').value});
+  renderSSL();closeModal('modal-ssl');
+  document.getElementById('ssl-domain').value='';document.getElementById('ssl-issuer').value='';
+}
+function addHW(){
+  const n=document.getElementById('hw-name').value.trim();
+  if(!n)return alert('Asset name required');
+  hardware.push({id:nextId.hw++,name:n,type:document.getElementById('hw-type').value,assignee:document.getElementById('hw-assign').value||'Unassigned',serial:document.getElementById('hw-serial').value||'N/A',warranty:document.getElementById('hw-warranty').value,status:'Active'});
+  renderHW();closeModal('modal-hw');
+  ['hw-name','hw-assign','hw-serial','hw-warranty'].forEach(id=>document.getElementById(id).value='');
+}
+function addSW(){
+  const n=document.getElementById('sw-name').value.trim();
+  if(!n)return alert('Name required');
+  software.push({id:nextId.sw++,name:n,vendor:document.getElementById('sw-vendor').value,seats:+document.getElementById('sw-seats').value||0,used:+document.getElementById('sw-used-seats').value||0,expiry:document.getElementById('sw-expiry').value,cost:+document.getElementById('sw-cost').value||0});
+  renderSW();closeModal('modal-sw');
+}
+function addVendor(){
+  const n=document.getElementById('v-name').value.trim();
+  if(!n)return alert('Vendor name required');
+  vendors.push({id:nextId.vendor++,vendor:n,service:document.getElementById('v-service').value,expiry:document.getElementById('v-expiry').value,owner:document.getElementById('v-owner').value||'IT Manager',cost:+document.getElementById('v-cost').value||0});
+  renderVendors();closeModal('modal-vendor');
+}
+function addRunbook(){
+  const t=document.getElementById('rb-title').value.trim();
+  if(!t)return alert('Title required');
+  runbooks.unshift({id:nextId.rb++,title:t,category:document.getElementById('rb-cat').value,steps:document.getElementById('rb-steps').value,author:'You',updated:new Date().toISOString().split('T')[0]});
+  renderRunbooks();closeModal('modal-runbook');
+  document.getElementById('rb-title').value='';document.getElementById('rb-steps').value='';
+}
+function addCR(){
+  const t=document.getElementById('cr-title').value.trim();
+  if(!t)return alert('Title required');
+  changeRequests.unshift({id:'CR-00'+nextId.cr++,title:t,requestor:document.getElementById('cr-req').value||'IT Manager',priority:document.getElementById('cr-pri').value,scheduled:document.getElementById('cr-date').value,status:'pending'});
+  renderCR();closeModal('modal-cr');
+  document.getElementById('cr-title').value='';document.getElementById('cr-req').value='';document.getElementById('cr-desc').value='';
+}
+function addMW(){
+  const t=document.getElementById('mw-title').value.trim();
+  if(!t)return alert('Title required');
+  maintenanceWindows.push({id:nextId.mw++,title:t,systems:document.getElementById('mw-systems').value,start:document.getElementById('mw-start').value,end:document.getElementById('mw-end').value});
+  renderMW();closeModal('modal-mw');
+  document.getElementById('mw-title').value='';document.getElementById('mw-systems').value='';
+}
+function addOncall(){
+  const n=document.getElementById('oc-name').value.trim();
+  if(!n)return alert('Name required');
+  const colors=['#58a6ff','#3fb950','#bc8cff','#d29922','#f85149'];
+  oncallList.push({id:nextId.oc++,name:n,phone:document.getElementById('oc-phone').value,start:document.getElementById('oc-start').value,end:document.getElementById('oc-end').value,color:colors[oncallList.length%colors.length]});
+  renderOncall();closeModal('modal-oncall');
+  document.getElementById('oc-name').value='';document.getElementById('oc-phone').value='';
 }
 
-function clr(p){return p>85?'#f87171':p>65?'#fbbf24':'#4ade80';}
-
-function bar(p){
-  return '<div style="display:flex;align-items:center;gap:6px"><div class="btrack" style="width:55px"><div class="bfill" style="width:'+p+'%;background:'+clr(p)+'"></div></div>'+p+'%</div>';
+// ── RENDER: SERVERS ──
+function renderServers(){
+  const q=(document.getElementById('srv-search').value||'').toLowerCase();
+  const f=document.getElementById('srv-filter').value;
+  const rows=servers.filter(s=>(!q||s.name.includes(q)||s.ip.includes(q))&&(!f||s.status===f))
+    .map(s=>{
+      const cpu=s.cpu;const ram=s.ram;
+      const cpuColor=cpu>85?'red':cpu>70?'amber':'green';
+      const ramColor=ram>90?'red':ram>75?'amber':'green';
+      return`<tr><td><strong style="color:var(--text)">${s.name}</strong></td><td style="font-family:var(--mono);font-size:12px">${s.ip}</td><td>${s.type}</td><td>${statusBadge(s.status)}</td>
+      <td><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar" style="width:60px"><div class="prog-fill ${cpuColor}" style="width:${cpu}%"></div></div><span style="color:var(--text2);font-size:12px">${cpu}%</span></div></td>
+      <td><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar" style="width:60px"><div class="prog-fill ${ramColor}" style="width:${ram}%"></div></div><span style="color:var(--text2);font-size:12px">${ram}%</span></div></td>
+      <td style="font-family:var(--mono);font-size:11px">${s.uptime}</td>
+      <td><button class="btn btn-danger" style="padding:3px 8px;font-size:11px" onclick="delServer(${s.id})"><i class="ti ti-trash"></i></button></td></tr>`}).join('');
+  document.getElementById('srv-body').innerHTML=rows||'<tr><td colspan="8" style="text-align:center;color:var(--text3)">No servers found</td></tr>';
 }
+function delServer(id){if(confirm('Remove server?')){servers=servers.filter(s=>s.id!==id);renderServers()}}
 
-async function fetchAll(){
-  try {
-    var r = await fetch(GURL+'/api/v1/metrics');
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    var text = await r.text();
-
-    var servers = {};
-
-    text.split('\n').forEach(function(line){
-      if(!line || line.startsWith('#')) return;
-      var match = line.match(/^(\w+)\{([^}]*)\}\s+([\d.eE+\-]+)/);
-      if(!match) return;
-      var name = match[1];
-      var labelStr = match[2];
-      var val = parseFloat(match[3]);
-      var instMatch = labelStr.match(/instance="([^"]+)"/);
-      if(!instMatch) return;
-      var inst = instMatch[1];
-      if(!servers[inst]) servers[inst]={ip:inst,cpu:null,mem:null,disk:null,up:0};
-      if(name==='server_up') servers[inst].up=val;
-      if(name==='cpu_usage') servers[inst].cpu=Math.round(val*10)/10;
-      if(name==='memory_usage') servers[inst].mem=Math.round(val*10)/10;
-      if(name==='disk_usage') servers[inst].disk=Math.round(val*10)/10;
-    });
-
-    // Mark servers with metrics but no explicit server_up as online
-    Object.values(servers).forEach(function(s){
-      if(s.cpu!==null && s.up===0) s.up=1;
-    });
-
-    serverData = Object.values(servers);
-    var upCount = serverData.filter(function(s){return s.up===1;}).length;
-    var total = serverData.length;
-    var avgCpu=0,avgMem=0,cnt=0;
-    allAlerts=[];
-
-    serverData.forEach(function(s){
-      if(s.up===1){
-        if(s.cpu!==null){avgCpu+=s.cpu;cnt++;}
-        if(s.mem!==null) avgMem+=s.mem;
-        if(s.cpu>85) allAlerts.push({sev:'Critical',src:s.ip,msg:'CPU at '+s.cpu+'%'});
-        if(s.mem>85) allAlerts.push({sev:'Warning',src:s.ip,msg:'Memory at '+s.mem+'%'});
-        if(s.disk>90) allAlerts.push({sev:'Warning',src:s.ip,msg:'Disk at '+s.disk+'%'});
-      } else {
-        allAlerts.push({sev:'Critical',src:s.ip,msg:'Server OFFLINE'});
-      }
-    });
-
-    var aC=cnt>0?Math.round(avgCpu/cnt):0;
-    var aM=cnt>0?Math.round(avgMem/cnt):0;
-
-    document.getElementById('m-servers').textContent=upCount+'/'+total;
-    document.getElementById('d-servers').textContent=(total-upCount)+' offline';
-    document.getElementById('m-cpu').textContent=aC+'%';
-    document.getElementById('b-cpu').style.cssText='width:'+aC+'%;background:'+clr(aC);
-    document.getElementById('d-cpu').textContent='Across '+cnt+' servers';
-    document.getElementById('m-mem').textContent=aM+'%';
-    document.getElementById('b-mem').style.cssText='width:'+aM+'%;background:'+clr(aM);
-    document.getElementById('d-mem').textContent='Average memory';
-    document.getElementById('m-alerts').textContent=allAlerts.length;
-    document.getElementById('d-alerts').textContent=allAlerts.length>0?allAlerts.length+' issues':'All systems normal';
-    document.getElementById('alert-badge').textContent=allAlerts.length;
-    document.getElementById('prom-dot').className='si si-g';
-    document.getElementById('sidebar-status').textContent='Render live';
-    document.getElementById('set-status').textContent='Connected to '+GURL;
-    document.getElementById('last-update').textContent='Updated '+new Date().toLocaleTimeString();
-
-    renderTable();
-    renderCards();
-    renderAlerts();
-    renderReg();
-
-  } catch(e){
-    document.getElementById('prom-dot').className='si si-r';
-    document.getElementById('sidebar-status').textContent='Not connected';
-    document.getElementById('set-status').textContent='Cannot reach '+GURL+' - check Render is running';
-    document.getElementById('last-update').textContent='Connection failed';
-    document.getElementById('servers-table').innerHTML='<tr><td colspan="5" style="text-align:center;color:#475569;padding:20px">Cannot connect to '+GURL+'</td></tr>';
-  }
+// ── RENDER: TICKETS ──
+function renderTickets(){
+  const q=(document.getElementById('tkt-search').value||'').toLowerCase();
+  const st=document.getElementById('tkt-status').value;
+  const pr=document.getElementById('tkt-priority').value;
+  const filtered=tickets.filter(t=>(!q||t.title.toLowerCase().includes(q)||t.id.toLowerCase().includes(q))&&(!st||t.status===st)&&(!pr||t.priority===pr));
+  const slaColor=v=>v>=80?'green':v>=50?'amber':'red';
+  const html=filtered.map(t=>`<div class="ticket-card">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div class="ticket-id">${t.id}</div>
+      <div style="display:flex;gap:6px">${priBadge(t.priority)}${statusBadge(t.status)}</div>
+    </div>
+    <div class="ticket-title">${t.title}</div>
+    <div style="display:flex;align-items:center;gap:12px;font-size:11px;color:var(--text3)">
+      <span><i class="ti ti-folder" style="font-size:12px"></i> ${t.category}</span>
+      <span><i class="ti ti-user" style="font-size:12px"></i> ${t.assignee}</span>
+      <span><i class="ti ti-calendar" style="font-size:12px"></i> ${t.created}</span>
+    </div>
+    <div class="sla-bar">
+      <span class="sla-label" style="color:var(--${slaColor(t.sla)})">SLA</span>
+      <div class="prog-bar" style="flex:1"><div class="prog-fill ${slaColor(t.sla)}" style="width:${t.sla}%"></div></div>
+      <span style="font-size:11px;color:var(--${slaColor(t.sla)})">${t.sla}%</span>
+      ${t.status==='open'?`<button class="btn btn-secondary" style="padding:2px 8px;font-size:11px;margin-left:8px" onclick="resolveTicket('${t.id}')">Resolve</button>`:''}
+    </div>
+  </div>`).join('');
+  document.getElementById('ticket-list').innerHTML=html||'<div style="text-align:center;color:var(--text3);padding:20px">No tickets found</div>';
 }
+function resolveTicket(id){const t=tickets.find(x=>x.id===id);if(t){t.status='resolved';t.sla=100;}renderTickets();const oc=tickets.filter(x=>x.status!=='resolved').length;document.getElementById('nb-tickets').textContent=oc;document.getElementById('dash-tickets').textContent=oc;}
 
-function renderTable(){
-  var rows=serverData.map(function(s){
-    var st=s.up===1?'<span class="badge badge-success">Online</span>':'<span class="badge badge-danger">Offline</span>';
-    var cpu=s.cpu!==null?bar(s.cpu):'--';
-    var mem=s.mem!==null?bar(s.mem):'--';
-    var disk=s.disk!==null?bar(s.disk):'--';
-    return '<tr><td>'+s.ip+'</td><td>'+cpu+'</td><td>'+mem+'</td><td>'+disk+'</td><td>'+st+'</td></tr>';
+// ── RENDER: SSL ──
+function renderSSL(){
+  const rows=sslCerts.map(c=>{
+    const days=daysBetween(c.expiry);
+    const st=days<0?'expired':days<30?'warning':'valid';
+    const sc={expired:'red',warning:'amber',valid:'green'};
+    return`<tr><td><strong style="color:var(--text)">${c.domain}</strong></td><td>${c.issuer}</td><td>${c.expiry}</td>
+    <td style="font-family:var(--mono);color:var(--${sc[st]})">${days}</td>
+    <td><span class="badge ${sc[st]}">${st}</span></td>
+    <td><button class="btn btn-danger" style="padding:3px 8px;font-size:11px" onclick="delSSL(${c.id})"><i class="ti ti-trash"></i></button></td></tr>`;
   }).join('');
-  document.getElementById('servers-table').innerHTML=rows||'<tr><td colspan="5" style="text-align:center;color:#475569;padding:20px">No servers found — install an agent first</td></tr>';
+  document.getElementById('ssl-body').innerHTML=rows;
+  const valid=sslCerts.filter(c=>daysBetween(c.expiry)>=30).length;
+  const warn=sslCerts.filter(c=>daysBetween(c.expiry)>=0&&daysBetween(c.expiry)<30).length;
+  const exp=sslCerts.filter(c=>daysBetween(c.expiry)<0).length;
+  document.getElementById('ssl-total').textContent=sslCerts.length;
+  document.getElementById('ssl-valid').textContent=valid;
+  document.getElementById('ssl-warn').textContent=warn;
+  document.getElementById('ssl-exp').textContent=exp;
+  document.getElementById('nb-ssl').textContent=warn+exp;
 }
+function delSSL(id){if(confirm('Remove certificate?')){sslCerts=sslCerts.filter(c=>c.id!==id);renderSSL()}}
 
-function renderCards(){
-  var cards=serverData.map(function(s){
-    var cls=s.up===1?(s.cpu>85||s.mem>85?'warn':'up'):'down';
-    var body=s.up===1?
-      '<div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">'+
-      (s.cpu!==null?'<div class="srow"><span class="sname">CPU</span><div class="btrack"><div class="bfill" style="width:'+s.cpu+'%;background:'+clr(s.cpu)+'"></div></div><span class="bval">'+s.cpu+'%</span></div>':'')+
-      (s.mem!==null?'<div class="srow"><span class="sname">Memory</span><div class="btrack"><div class="bfill" style="width:'+s.mem+'%;background:'+clr(s.mem)+'"></div></div><span class="bval">'+s.mem+'%</span></div>':'')+
-      (s.disk!==null?'<div class="srow"><span class="sname">Disk</span><div class="btrack"><div class="bfill" style="width:'+s.disk+'%;background:'+clr(s.disk)+'"></div></div><span class="bval">'+s.disk+'%</span></div>':'')+
-      '</div>':
-      '<div style="color:#f87171;font-size:12px;margin-top:10px">Server offline</div>';
-    return '<div class="srv-card '+cls+'">'+
-      '<div style="display:flex;align-items:center;justify-content:space-between">'+
-      '<div style="font-size:13px;font-weight:600;color:#e2e8f0">'+s.ip+'</div>'+
-      (s.up===1?'<span class="badge badge-success">Online</span>':'<span class="badge badge-danger">Offline</span>')+
-      '</div>'+body+'</div>';
-  }).join('');
-  document.getElementById('srv-grid').innerHTML=cards||'<div style="color:#475569;padding:20px">No servers — install an agent first</div>';
-}
-
-function renderAlerts(){
-  document.getElementById('alerts-count').textContent=allAlerts.length+' open';
-  document.getElementById('alerts-body').innerHTML=allAlerts.length===0?
-    '<div style="color:#475569;font-size:13px;padding:20px 0;text-align:center">All systems normal</div>':
-    allAlerts.map(function(a){
-      return '<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #1e2d40">'+
-        '<span class="badge '+(a.sev==='Critical'?'badge-danger':'badge-warning')+'">'+a.sev+'</span>'+
-        '<span style="font-weight:500;color:#e2e8f0;min-width:160px">'+a.src+'</span>'+
-        '<span style="color:#94a3b8;font-size:12px">'+a.msg+'</span></div>';
+// ── RENDER: HARDWARE ──
+function renderHW(){
+  const q=(document.getElementById('hw-search').value||'').toLowerCase();
+  const f=document.getElementById('hw-filter').value;
+  const rows=hardware.filter(h=>(!q||h.name.toLowerCase().includes(q)||h.assignee.toLowerCase().includes(q))&&(!f||h.type===f))
+    .map(h=>{
+      const d=daysBetween(h.warranty);
+      const ws=d<0?'Expired':d<90?'Expiring':'Valid';
+      const wc=d<0?'red':d<90?'amber':'green';
+      return`<tr><td><strong style="color:var(--text)">${h.name}</strong></td><td>${h.type}</td><td>${h.assignee}</td>
+      <td style="font-family:var(--mono);font-size:11px">${h.serial}</td>
+      <td><span style="color:var(--${wc})">${h.warranty||'N/A'} <small>(${ws})</small></span></td>
+      <td>${statusBadge(h.status==='Active'?'online':'offline')}</td>
+      <td><button class="btn btn-danger" style="padding:3px 8px;font-size:11px" onclick="delHW(${h.id})"><i class="ti ti-trash"></i></button></td></tr>`;
     }).join('');
+  document.getElementById('hw-body').innerHTML=rows||'<tr><td colspan="7" style="text-align:center;color:var(--text3)">No assets found</td></tr>';
+}
+function delHW(id){if(confirm('Remove asset?')){hardware=hardware.filter(h=>h.id!==id);renderHW()}}
+
+// ── RENDER: SOFTWARE ──
+function renderSW(){
+  const rows=software.map(s=>{
+    const util=Math.round(s.used/s.seats*100);
+    const uc=util>90?'red':util>75?'amber':'green';
+    const days=daysBetween(s.expiry);
+    const ec=days<0?'red':days<30?'amber':'green';
+    return`<tr><td><strong style="color:var(--text)">${s.name}</strong></td><td>${s.vendor}</td>
+    <td style="text-align:center">${s.seats}</td><td style="text-align:center">${s.used}</td>
+    <td><div style="display:flex;align-items:center;gap:6px"><div class="prog-bar" style="width:70px"><div class="prog-fill ${uc}" style="width:${util}%"></div></div><span style="font-size:12px;color:var(--${uc})">${util}%</span></div></td>
+    <td><span style="color:var(--${ec})">${s.expiry}</span></td>
+    <td style="font-family:var(--mono)">$${fmt(s.cost)}</td></tr>`;
+  }).join('');
+  document.getElementById('sw-body').innerHTML=rows;
+  document.getElementById('sw-total').textContent=software.length;
+  document.getElementById('sw-used').textContent=software.reduce((a,s)=>a+s.used,0);
+  document.getElementById('sw-avail').textContent=software.reduce((a,s)=>a+(s.seats-s.used),0);
+  document.getElementById('sw-expiring').textContent=software.filter(s=>daysBetween(s.expiry)<30).length;
 }
 
-function renderReg(){
-  var el=document.getElementById('reg-servers');
-  if(!el) return;
-  el.innerHTML=serverData.length>0?
-    serverData.map(function(s){
-      return '<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1e2d40">'+
-        '<div style="font-size:13px;font-weight:500;color:#e2e8f0">'+s.ip+'</div>'+
-        (s.up===1?'<span class="badge badge-success">Online</span>':'<span class="badge badge-danger">Offline</span>')+
-        '</div>';
-    }).join(''):
-    '<div style="color:#475569;font-size:13px">No servers registered yet</div>';
+// ── RENDER: VENDORS ──
+function renderVendors(){
+  const rows=vendors.map(v=>{
+    const days=daysBetween(v.expiry);
+    const dc=days<0?'red':days<60?'amber':'green';
+    const st=days<0?'expired':days<60?'warning':'active';
+    return`<tr><td><strong style="color:var(--text)">${v.vendor}</strong></td><td>${v.service}</td>
+    <td>${v.expiry}</td><td style="color:var(--${dc});font-family:var(--mono)">${days}</td>
+    <td>${v.owner}</td><td style="font-family:var(--mono)">$${fmt(v.cost)}</td><td>${statusBadge(st)}</td></tr>`;
+  }).join('');
+  document.getElementById('vendor-body').innerHTML=rows;
+  document.getElementById('cost-vendors').textContent=vendors.length;
 }
 
-function downloadAgent(){
-  var blob=new Blob([BAT],{type:'application/octet-stream'});
-  var a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='ITAgent-Setup.bat';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+// ── RENDER: ALERTS ──
+function renderAlerts(){
+  const f=document.getElementById('alertFilter').value;
+  const list=alerts.filter(a=>!f||a.type===f);
+  const html=list.map(a=>`<div class="alert-item ${a.type}" style="${a.read?'opacity:.6':''}">
+    <i class="ti ti-${a.type==='critical'?'alert-circle':a.type==='warning'?'alert-triangle':a.type==='success'?'circle-check':'info-circle'}" style="font-size:16px;margin-top:1px"></i>
+    <div style="flex:1"><div class="alert-title">${a.title}</div><div class="alert-time">${a.time}</div></div>
+    ${!a.read?`<button class="btn btn-secondary" style="padding:2px 8px;font-size:11px" onclick="markRead(${a.id})">Dismiss</button>`:''}
+  </div>`).join('');
+  document.getElementById('alerts-list').innerHTML=html||'<div style="text-align:center;color:var(--text3);padding:20px">No alerts</div>';
+  document.getElementById('nb-alerts').textContent=alerts.filter(a=>!a.read).length;
+}
+function markRead(id){const a=alerts.find(x=>x.id===id);if(a)a.read=true;renderAlerts()}
+function markAllRead(){alerts.forEach(a=>a.read=true);renderAlerts()}
+
+// ── RENDER: AUDIT ──
+function renderAudit(){
+  const rows=auditLog.map(a=>`<tr>
+    <td style="font-family:var(--mono);font-size:11px">${a.time}</td>
+    <td>${a.user}</td><td>${a.action}</td><td>${a.resource}</td>
+    <td style="font-family:var(--mono);font-size:11px">${a.ip}</td>
+    <td>${statusBadge(a.status)}</td></tr>`).join('');
+  document.getElementById('audit-body').innerHTML=rows;
 }
 
-async function sendAI(){
-  var inp=document.getElementById('ai-inp');
-  var msgs=document.getElementById('ai-msgs');
-  var text=inp.value.trim();
-  if(!text) return;
-  inp.value='';
-  msgs.innerHTML+='<div class="msg msg-user">'+text+'</div>';
-  msgs.scrollTop=msgs.scrollHeight;
-  var t=document.createElement('div');
-  t.className='msg msg-ai';t.textContent='Thinking...';
-  msgs.appendChild(t);msgs.scrollTop=msgs.scrollHeight;
-  try{
-    var summary=serverData.map(function(s){return s.ip+': CPU='+s.cpu+'%, Mem='+s.mem+'%, '+(s.up===1?'Online':'OFFLINE');}).join(' | ');
-    var r=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:600,
-        system:'IT assistant for Noor Capital. Servers: '+summary+'. Alerts: '+(allAlerts.length>0?allAlerts.map(function(a){return a.src+':'+a.msg;}).join(', '):'None')+'. Be concise.',
-        messages:[{role:'user',content:text}]
-      })
-    });
-    var d=await r.json();
-    t.textContent=d.content&&d.content[0]?d.content[0].text:'No response';
-  }catch(e){t.textContent='AI unavailable.';}
-  msgs.scrollTop=msgs.scrollHeight;
+// ── RENDER: ONCALL ──
+function renderOncall(){
+  const today=new Date().toISOString().split('T')[0];
+  const current=oncallList.find(o=>o.start<=today&&o.end>=today)||oncallList[0];
+  const initials=n=>n.split(' ').map(x=>x[0]).join('');
+  document.getElementById('current-oncall').innerHTML=current?`
+    <div style="display:flex;align-items:center;gap:14px;padding:12px 0">
+      <div class="avatar" style="width:48px;height:48px;font-size:16px;background:${current.color}22;color:${current.color}">${initials(current.name)}</div>
+      <div><div style="font-size:16px;font-weight:500">${current.name}</div>
+      <div style="font-size:13px;color:var(--text2);margin-top:2px"><i class="ti ti-phone" style="font-size:13px"></i> ${current.phone}</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px">${current.start} → ${current.end}</div></div>
+    </div>`:'<div style="color:var(--text3)">No on-call engineer scheduled</div>';
+  const sched=oncallList.map(o=>`<div class="oncall-row">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="avatar" style="background:${o.color}22;color:${o.color}">${initials(o.name)}</div>
+      <div><div style="font-size:13px;font-weight:500">${o.name}</div><div style="font-size:11px;color:var(--text3)">${o.start} — ${o.end}</div></div>
+    </div>
+    <span style="font-family:var(--mono);font-size:12px;color:var(--text2)">${o.phone}</span>
+  </div>`).join('');
+  document.getElementById('oncall-schedule').innerHTML=sched;
 }
 
-document.getElementById('prom-url-inp').value=GURL;
-fetchAll();
-setInterval(fetchAll,15000);
+// ── RENDER: RUNBOOKS ──
+function renderRunbooks(){
+  const q=(document.getElementById('rb-search').value||'').toLowerCase();
+  const f=document.getElementById('rb-filter').value;
+  const catColor={Incident:'red',Maintenance:'blue',Security:'amber',Networking:'green'};
+  const list=runbooks.filter(r=>(!q||r.title.toLowerCase().includes(q))&&(!f||r.category===f));
+  const html=list.map(r=>`<div class="runbook-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div style="font-weight:500">${r.title}</div>
+      <span class="badge ${catColor[r.category]||'blue'}">${r.category}</span>
+    </div>
+    <div style="font-size:12px;color:var(--text3);white-space:pre-line;line-height:1.6">${r.steps}</div>
+    <div style="font-size:11px;color:var(--text3);margin-top:8px">By ${r.author} · Updated ${r.updated}</div>
+  </div>`).join('');
+  document.getElementById('runbook-list').innerHTML=html||'<div style="color:var(--text3);text-align:center;padding:20px">No runbooks found</div>';
+}
+
+// ── RENDER: CHANGE REQUESTS ──
+function renderCR(){
+  const rows=changeRequests.map(c=>`<tr>
+    <td style="font-family:var(--mono);font-size:11px">${c.id}</td>
+    <td><strong style="color:var(--text)">${c.title}</strong></td>
+    <td>${c.requestor}</td><td>${priBadge(c.priority)}</td>
+    <td>${c.scheduled}</td><td>${statusBadge(c.status)}</td>
+    <td style="display:flex;gap:4px">
+      ${c.status==='pending'?`<button class="btn btn-secondary" style="padding:3px 8px;font-size:11px" onclick="approveCR('${c.id}')">Approve</button>
+      <button class="btn btn-danger" style="padding:3px 8px;font-size:11px" onclick="rejectCR('${c.id}')">Reject</button>`:''}
+    </td></tr>`).join('');
+  document.getElementById('cr-body').innerHTML=rows;
+}
+function approveCR(id){const c=changeRequests.find(x=>x.id===id);if(c)c.status='approved';renderCR()}
+function rejectCR(id){const c=changeRequests.find(x=>x.id===id);if(c)c.status='rejected';renderCR()}
+
+// ── RENDER: MAINTENANCE ──
+function renderMW(){
+  const html=maintenanceWindows.map(m=>`<div class="card" style="margin-bottom:10px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div style="font-weight:500"><i class="ti ti-calendar-event" style="color:var(--blue);margin-right:6px"></i>${m.title}</div>
+      <button class="btn btn-danger" style="padding:3px 8px;font-size:11px" onclick="delMW(${m.id})"><i class="ti ti-trash"></i></button>
+    </div>
+    <div style="font-size:12px;color:var(--text2)"><i class="ti ti-server" style="font-size:12px"></i> ${m.systems}</div>
+    <div style="font-size:12px;color:var(--text2);margin-top:4px"><i class="ti ti-clock" style="font-size:12px"></i> ${m.start} → ${m.end}</div>
+  </div>`).join('');
+  document.getElementById('mw-list').innerHTML=html||'<div style="color:var(--text3);text-align:center;padding:20px">No maintenance windows scheduled</div>';
+}
+function delMW(id){if(confirm('Remove maintenance window?')){maintenanceWindows=maintenanceWindows.filter(m=>m.id!==id);renderMW()}}
+
+// ── RENDER: NETWORK ──
+function renderNetwork(){
+  const netDevices=[
+    {name:'Core Switch',ip:'10.0.0.1',type:'Switch',status:'online',latency:'1ms'},
+    {name:'Firewall',ip:'10.0.0.254',type:'Firewall',status:'online',latency:'2ms'},
+    {name:'AP - Floor 1',ip:'10.0.5.10',type:'Access Point',status:'online',latency:'4ms'},
+    {name:'AP - Floor 2',ip:'10.0.5.11',type:'Access Point',status:'warning',latency:'18ms'},
+    {name:'Edge Router',ip:'10.0.0.2',type:'Router',status:'online',latency:'3ms'},
+  ];
+  const rows=netDevices.map(d=>`<tr><td><strong style="color:var(--text)">${d.name}</strong></td>
+    <td style="font-family:var(--mono);font-size:12px">${d.ip}</td>
+    <td>${d.type}</td><td>${statusBadge(d.status)}</td>
+    <td style="font-family:var(--mono);color:var(--green)">${d.latency}</td>
+    <td style="color:var(--text3)">Just now</td></tr>`).join('');
+  document.getElementById('net-body').innerHTML=rows;
+  const pings=[{host:'8.8.8.8',ms:12,ok:true},{host:'1.1.1.1',ms:9,ok:true},{host:'gateway',ms:1,ok:true},{host:'mail.company.com',ms:22,ok:true},{host:'vpn.company.com',ms:310,ok:false}];
+  document.getElementById('ping-list').innerHTML=pings.map(p=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)">
+    <span style="color:var(--text2)">${p.host}</span>
+    <span style="color:${p.ok?'var(--green)':'var(--red)'}">${p.ok?p.ms+'ms':'TIMEOUT'}</span>
+  </div>`).join('');
+}
+
+// ── RENDER: SECURITY ──
+function initSecurity(){
+  document.getElementById('pw-audit').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)"><span style="font-size:13px">Accounts with weak passwords</span><span class="badge red">3</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)"><span style="font-size:13px">Passwords not changed in 90+ days</span><span class="badge amber">11</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)"><span style="font-size:13px">Shared/reused credentials detected</span><span class="badge amber">2</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0"><span style="font-size:13px">MFA enabled</span><span class="badge green">78%</span></div>
+    </div>`;
+  document.getElementById('fw-log').innerHTML=[
+    {time:'2026-05-15 08:12',action:'Rule Added',by:'admin',detail:'Allow TCP 8443 from dev subnet'},
+    {time:'2026-05-14 17:30',action:'IP Blocked',by:'System',detail:'185.220.101.42 — brute force'},
+    {time:'2026-05-13 10:00',action:'Rule Modified',by:'Mohamed Nasser',detail:'Updated SMTP allow rule'},
+  ].map(r=>`<div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px">
+    <span style="color:var(--text3);font-family:var(--mono);width:130px;flex-shrink:0">${r.time}</span>
+    <span class="badge amber">${r.action}</span>
+    <span style="color:var(--text2)">${r.detail}</span>
+    <span style="margin-left:auto;color:var(--text3)">${r.by}</span>
+  </div>`).join('');
+}
+
+// ── RENDER: PORTAL ──
+function renderPortal(){
+  const items=[
+    {name:'Email / M365',status:'operational'},{name:'VPN',status:'operational'},
+    {name:'SharePoint',status:'operational'},{name:'Network',status:'operational'},
+    {name:'Backup Service',status:'offline'},{name:'Internal Wi-Fi',status:'operational'},
+  ];
+  document.getElementById('portal-status').innerHTML=items.map(s=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:13px">${s.name}</span>
+      ${statusBadge(s.status==='operational'?'online':'offline')}
+    </div>`).join('');
+}
+
+// ── RENDER: COSTS ──
+function renderCosts(){
+  document.getElementById('vendor-costs').innerHTML=vendors.sort((a,b)=>b.cost-a.cost).map(v=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+      <div><div style="font-size:13px;font-weight:500">${v.vendor}</div><div style="font-size:11px;color:var(--text3)">${v.service}</div></div>
+      <div style="font-family:var(--mono);color:var(--blue)">$${fmt(v.cost)}/yr</div>
+    </div>`).join('');
+}
+
+// ── INTEGRATION TOGGLE ──
+const intState={m365:true,slack:true,teams:false,whatsapp:false,sharepoint:true,email:true};
+function toggleIntegration(key){
+  intState[key]=!intState[key];
+  const el=document.getElementById(key+'-badge');
+  el.innerHTML=intState[key]?'<span class="badge green"><i class="ti ti-check"></i> Connected</span>':'<span class="badge amber">Configure</span>';
+}
+
+// ── EXPORT ──
+function exportCSV(){
+  const rows=[['IT Command Center Export','Date',new Date().toLocaleDateString()],[''],['SERVERS'],['Name','IP','Type','Status','CPU%','RAM%','Uptime'],...servers.map(s=>[s.name,s.ip,s.type,s.status,s.cpu,s.ram,s.uptime]),[''],['TICKETS'],['ID','Title','Priority','Status','Assignee'],...tickets.map(t=>[t.id,t.title,t.priority,t.status,t.assignee])];
+  const csv=rows.map(r=>r.join(',')).join('\n');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='it-export.csv';document.body.appendChild(a);a.click();document.body.removeChild(a);
+}
+
+// ── CHARTS (Dashboard) ──
+function initCharts(){
+  const labels=['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00'];
+  const netData=()=>labels.map(()=>Math.floor(Math.random()*300)+100);
+  new Chart(document.getElementById('netChart'),{type:'line',data:{labels,datasets:[
+    {label:'Inbound',data:netData(),borderColor:'#58a6ff',backgroundColor:'rgba(88,166,255,0.08)',tension:.4,fill:true,pointRadius:0},
+    {label:'Outbound',data:netData(),borderColor:'#3fb950',backgroundColor:'rgba(63,185,80,0.06)',tension:.4,fill:true,pointRadius:0}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6e7681',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},y:{ticks:{color:'#6e7681',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}}}}});
+
+  const srvNames=servers.map(s=>s.name.replace('prod-',''));
+  new Chart(document.getElementById('resChart'),{type:'bar',data:{labels:srvNames,datasets:[
+    {label:'CPU',data:servers.map(s=>s.cpu),backgroundColor:'#58a6ff55',borderColor:'#58a6ff',borderWidth:1},
+    {label:'RAM',data:servers.map(s=>s.ram),backgroundColor:'#3fb95055',borderColor:'#3fb950',borderWidth:1}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#8b949e',font:{size:11}}}},scales:{x:{ticks:{color:'#6e7681',font:{size:10}},grid:{display:false}},y:{max:100,ticks:{color:'#6e7681',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}}}}});
+
+  new Chart(document.getElementById('ticketChart'),{type:'doughnut',data:{labels:['Critical','High','Medium','Low'],datasets:[{data:[2,2,2,1],backgroundColor:['#f85149','#d29922','#58a6ff','#bc8cff'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{color:'#8b949e',font:{size:11}}}}}});
+
+  // Dashboard alerts feed
+  const dash=document.getElementById('dash-alerts-feed');
+  dash.innerHTML=alerts.slice(0,4).map(a=>`<div class="alert-item ${a.type}" style="margin-bottom:6px">
+    <i class="ti ti-${a.type==='critical'?'alert-circle':a.type==='warning'?'alert-triangle':'info-circle'}" style="font-size:15px;margin-top:1px"></i>
+    <div><div class="alert-title">${a.title}</div><div class="alert-time">${a.time}</div></div>
+  </div>`).join('');
+
+  // Network live chart
+  const liveData=Array.from({length:12},()=>Math.floor(Math.random()*400)+80);
+  const liveChart=new Chart(document.getElementById('liveNet'),{type:'line',data:{labels:Array.from({length:12},(_,i)=>i+':00'),datasets:[{label:'Mbps',data:liveData,borderColor:'#58a6ff',backgroundColor:'rgba(88,166,255,0.06)',tension:.4,fill:true,pointRadius:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6e7681',font:{size:10}},grid:{display:false}},y:{ticks:{color:'#6e7681',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}}}}});
+  setInterval(()=>{liveData.shift();liveData.push(Math.floor(Math.random()*400)+80);liveChart.data.datasets[0].data=[...liveData];liveChart.update('none');},2000);
+
+  // Security failed logins
+  new Chart(document.getElementById('secChart'),{type:'bar',data:{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],datasets:[{data:[5,8,3,12,47,7,4],backgroundColor:'#f8514944',borderColor:'#f85149',borderWidth:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6e7681',font:{size:10}},grid:{display:false}},y:{ticks:{color:'#6e7681',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}}}}});
+
+  // Uptime report
+  new Chart(document.getElementById('uptimeChart'),{type:'bar',data:{labels:['Dec','Jan','Feb','Mar','Apr','May'],datasets:[{label:'Uptime %',data:[99.8,99.9,99.5,100,99.7,99.9],backgroundColor:'#3fb95066',borderColor:'#3fb950',borderWidth:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6e7681',font:{size:10}},grid:{display:false}},y:{min:99,max:100.1,ticks:{color:'#6e7681',font:{size:10},callback:v=>v+'%'},grid:{color:'rgba(255,255,255,0.04)'}}}}});
+
+  // Resolution time
+  new Chart(document.getElementById('resTimeChart'),{type:'line',data:{labels:['Dec','Jan','Feb','Mar','Apr','May'],datasets:[{label:'Avg days',data:[3.2,2.8,3.5,2.1,1.9,2.3],borderColor:'#bc8cff',backgroundColor:'rgba(188,140,255,0.06)',tension:.4,fill:true,pointRadius:3,pointBackgroundColor:'#bc8cff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6e7681',font:{size:10}},grid:{display:false}},y:{ticks:{color:'#6e7681',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}}}}});
+
+  // Cost pie
+  new Chart(document.getElementById('costChart'),{type:'doughnut',data:{labels:['Cloud/Hosting','Software Licenses','Hardware','Security','Networking','Other'],datasets:[{data:[36000,20400,8000,7200,5400,5400],backgroundColor:['#58a6ff','#3fb950','#d29922','#bc8cff','#f85149','#6e7681'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{color:'#8b949e',font:{size:11}}}}}});
+}
+
+// ── INIT ──
+window.addEventListener('load',()=>{
+  initCharts();
+  renderSSL();
+  renderServers();
+  renderTickets();
+  renderVendors();
+  renderOncall();
+  renderCosts();
+});
 </script>
 </body>
 </html>
