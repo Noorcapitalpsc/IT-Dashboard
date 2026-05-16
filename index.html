@@ -716,7 +716,7 @@ textarea{background:var(--bg3);border:1px solid var(--border);border-radius:var(
 // ══════════════════════════════════════════
 // CONFIG — Prometheus URL
 // ══════════════════════════════════════════
-const DEFAULT_PROM_URL = 'https://85c11911-349d-441a-922c-c050ee5975fd.cfargotunnel.com';
+const DEFAULT_PROM_URL = 'https://misty-fire-7dca.noor-capital.workers.dev';
 let PROM_URL = localStorage.getItem('promUrl') || DEFAULT_PROM_URL;
 let REFRESH_INTERVAL = parseInt(localStorage.getItem('refreshInterval') || '15') * 1000;
 let refreshTimer = null;
@@ -772,22 +772,26 @@ let nextId = {ticket:1,ssl:4,hw:3,sw:3,vendor:4,rb:3,cr:2,mw:1,oc:2,srv:1};
 // ══════════════════════════════════════════
 // PROMETHEUS API
 // ══════════════════════════════════════════
+function fetchWithTimeout(url, ms) {
+  return Promise.race([
+    fetch(url, { headers: { 'Accept': 'application/json' } }),
+    new Promise((_, reject) => setTimeout(() => reject(new Error('Request timeout')), ms))
+  ]);
+}
+
 async function promQuery(query) {
-  const url = `${PROM_URL}/api/v1/query?query=${encodeURIComponent(query)}`;
-  const resp = await fetch(url, {
-    headers: { 'Accept': 'application/json' },
-    signal: AbortSignal.timeout(8000)
-  });
-  if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+  const url = PROM_URL + '/api/v1/query?query=' + encodeURIComponent(query);
+  const resp = await fetchWithTimeout(url, 8000);
+  if (!resp.ok) throw new Error('HTTP ' + resp.status);
   const data = await resp.json();
   if (data.status !== 'success') throw new Error('Query failed');
   return data.data.result;
 }
 
 async function promQueryRange(query, start, end, step) {
-  const url = `${PROM_URL}/api/v1/query_range?query=${encodeURIComponent(query)}&start=${start}&end=${end}&step=${step}`;
-  const resp = await fetch(url, { signal: AbortSignal.timeout(10000) });
-  if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+  const url = PROM_URL + '/api/v1/query_range?query=' + encodeURIComponent(query) + '&start=' + start + '&end=' + end + '&step=' + step;
+  const resp = await fetchWithTimeout(url, 10000);
+  if (!resp.ok) throw new Error('HTTP ' + resp.status);
   const data = await resp.json();
   return data.data.result;
 }
