@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: it-command-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: TUNNEL_URL
+        value: ""
+      - key: UPDATE_SECRET
+        value: "NoorCapital2026!"
+      - key: PORT
+        value: "3000"
